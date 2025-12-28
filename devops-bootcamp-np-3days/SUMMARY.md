@@ -14,7 +14,7 @@
   * [Lab 10: Publish Terraform Modules as Git Submodules for Easy Distribution](infrastructure-as-code-terraform/lab-10-publish-terraform-modules-as-git-submodules-for-easy-distribution.md)
   * [Lab 11: Troubleshoot AWS Scripts](infrastructure-as-code-terraform/lab-11-troubleshoot-aws-scripts.md)
 
-* [Containerization with Docker](README.md)
+* [Containerization with Docker](containerisation-with-docker/README.md)
   * [Docker Slides](containerisation-with-docker/slides.md)
   * [Lab 1: Docker Installation](containerisation-with-docker/lab-1-docker-installation.md)
   * [Lab 2: Containerizing a Node.js Application with Docker](containerisation-with-docker/lab-2-containerizing-a-node.js-application-with-docker.md)
@@ -26,7 +26,7 @@
   * [Lab 8: Multi-Stage Build and Deployment of a Java Application as a Docker Container](containerisation-with-docker/lab-8-multi-stage-build-and-deployment-of-a-java-application-as-a-docker-container.md)
   * [Assignment: Deploy a Three-Tier Application with Docker Compose](containerisation-with-docker/assignment-deploy-a-three-tier-application-with-docker-compose.md)
 
-* [Orchestration with Kubernetes](README.md)
+* [Orchestration with Kubernetes](orchestration-with-kubernetes/README.md)
   * [Kubernetes Slides](orchestration-with-kubernetes/slides.md)
   * [Lab 1: Get Hands-On with Kubectl and Launch Your First Pod](orchestration-with-kubernetes/lab-1-get-hands-on-with-kubectl-and-launch-your-first-pod.md)
   * [Lab 2: Deployments and ReplicaSets](orchestration-with-kubernetes/lab-2-deployments-and-replicasets.md)
@@ -42,8 +42,7 @@
   * [Lab 12: Vertical Pod Autoscaler](orchestration-with-kubernetes/lab-12-vertical-pod-autoscaler.md)
   * [Lab 13: Expose the Three-Tier App with a Single AWS LB](orchestration-with-kubernetes/lab-13-expose-the-three-tier-app-with-a-single-aws-lb.md)
 
-* [CI/CD Pipelines with Jenkins](README.md)
-  * [Jenkins Slides](ci-cd-with-jenkins/slides.md)
+* [CI/CD Pipelines with Jenkins](ci-cd-with-jenkins/slides.md)
   * [Lab 1: Your First Jenkins Pipeline](ci-cd-with-jenkins/lab-1-your-first-jenkins-pipeline.md)
   * [Lab 2: Continuous Integration for a Node.js Application](ci-cd-with-jenkins/lab-2-continuous-integration-for-a-node.js-application.md)
   * [Lab 3: Optional Setup SonarQube and Scan Application Code](ci-cd-with-jenkins/lab-3-optional-setup-sonarqube-and-scan-application-code.md)
