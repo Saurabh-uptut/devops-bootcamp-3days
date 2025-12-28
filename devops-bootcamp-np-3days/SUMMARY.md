@@ -1,0 +1,61 @@
+# Summary
+
+## 1. Infrastructure as Code with Terraform
+
+* [Lab 1: Provision Your First Infrastructure](iac-with-terraform/lab-1-provision-your-first-infrastructure.md)
+* [Lab 2: Provision AWS VPC](iac-with-terraform/lab-2-provision-aws-vpc.md)
+* [Lab 3: Terraform State File Remote Storage](iac-with-terraform/lab-3-terraform-state-file-remote-storage.md)
+* [Lab 4: Practice Count and For_Each Meta-Arguments in Terraform](iac-with-terraform/lab-4-practice-count-and-for_each-meta-arguments-in-terraform.md)
+* [Lab 5: Building Custom Module](iac-with-terraform/lab-5-building-custom-module.md)
+* [Lab 6: Troubleshooting Terraform Scripts AWS Cloud](iac-with-terraform/lab-6-troubleshooting-terraform-scripts-aws-cloud.md)
+* [Lab 7: Provision an AWS Elastic Kubernetes Service Cluster Using Terraform](iac-with-terraform/lab-7-provision-an-aws-elastic-kubernetes-service-cluster-using-terraform.md)
+* [Lab 8: Provision Infrastructure Using Reusable Modules AWS](iac-with-terraform/lab-8-provision-infrastructure-using-reusable-modules-aws.md)
+* [Lab 9: Terraform Workspaces](iac-with-terraform/lab-9-terraform-workspaces.md)
+* [Lab 10: Publish Terraform Modules as Git Submodules for Easy Distribution](iac-with-terraform/lab-10-publish-terraform-modules-as-git-submodules-for-easy-distribution.md)
+* [Lab 11: Troubleshoot AWS Scripts](iac-with-terraform/lab-11-troubleshoot-aws-scripts.md)
+* [Terraform Slides](iac-with-terraform/slides.md)
+
+## 2. Containerization with Docker
+
+* [Docker README](containerisation-with-docker/README.md)
+* [Lab 1: Docker Installation](containerisation-with-docker/lab-1-docker-installation.md)
+* [Lab 2: Containerizing a Node.js Application with Docker](containerisation-with-docker/lab-2-containerizing-a-node.js-application-with-docker.md)
+* [Lab 3: Managing Containers and Images](containerisation-with-docker/lab-3-managing-containers-and-images.md)
+* [Lab 4: Understand Docker Networking](containerisation-with-docker/lab-4-understand-docker-networking.md)
+* [Lab 5: Deploy PostgreSQL with Docker Volumes Persistence Init Scripts Backup Restore](containerisation-with-docker/lab-5-deploy-postgresql-with-docker-volumes-persistence-init-scripts-backup-restore.md)
+* [Lab 6: Deploy a Two-Tier Node.js and PostgreSQL Application with Docker](containerisation-with-docker/lab6-deploy-a-two-tier-node.js-and-postgresql-application-with-docker.md)
+* [Lab 7: Deploy a Two-Tier Application Using Docker Compose](containerisation-with-docker/lab-7-deploy-a-two-tier-application-using-docker-compose.md)
+* [Lab 8: Multi-Stage Build and Deployment of a Java Application as a Docker Container](containerisation-with-docker/lab-8-multi-stage-build-and-deployment-of-a-java-application-as-a-docker-container.md)
+* [Assignment: Deploy a Three-Tier Application with Docker Compose](containerisation-with-docker/assignment-deploy-a-three-tier-application-with-docker-compose.md)
+* [Docker Slides](containerisation-with-docker/slides.md)
+
+## 3. Orchestration with Kubernetes
+
+* [Kubernetes README](orchestration-with-kubernetes/README.md)
+* [Lab 1: Get Hands-On with Kubectl and Launch Your First Pod](orchestration-with-kubernetes/lab-1-get-hands-on-with-kubectl-and-launch-your-first-pod.md)
+* [Lab 2: Deployments and ReplicaSets](orchestration-with-kubernetes/lab-2-deployments-and-replicasets.md)
+* [Lab 3: Rolling Updates](orchestration-with-kubernetes/lab-3-rolling-updates.md)
+* [Lab 4: Declarative Kubernetes with Pods ReplicaSets and Deployments](orchestration-with-kubernetes/lab-4-declarative-kubernetes-with-pods-replicasets-and-deployments.md)
+* [Lab 5: Exposing an Application with Kubernetes Services](orchestration-with-kubernetes/lab-5-exposing-an-application-with-kubernetes-services.md)
+* [Lab 6: Deploy a Standalone Node.js Application on GKE Cluster](orchestration-with-kubernetes/lab-6-deploy-a-standalone-nodejs-application-on-gke-cluster.md)
+* [Lab 7: Deploy a Three-Tier Application on Kubernetes Cluster](orchestration-with-kubernetes/lab-7-deploy-a-three-tier-application-on-kubernetes-cluster.md)
+* [Lab 8: Intelligent Pod Placement and Scheduling](orchestration-with-kubernetes/lab-8-intelligent-pod-placement-and-scheduling.md)
+* [Lab 9: Exposing Three-Tier Application Using Ingress](orchestration-with-kubernetes/lab-9-exposing-three-tier-application-using-ingress.md)
+* [Lab 10: Persist Your Data with PV and PVC on GKS](orchestration-with-kubernetes/lab-10-persist-your-data-with-pv-and-pvc-on-gks.md)
+* [Lab 11: Horizontal Pod Autoscaler](orchestration-with-kubernetes/lab-11-horizontal-pod-autoscaler.md)
+* [Lab 12: Vertical Pod Autoscaler](orchestration-with-kubernetes/lab-12-vertical-pod-autoscaler.md)
+* [Lab 13: Expose the Three-Tier App with a Single AWS LB](orchestration-with-kubernetes/lab-13-expose-the-three-tier-app-with-a-single-aws-lb.md)
+* [Kubernetes Slides](orchestration-with-kubernetes/slides.md)
+
+## 4. CI/CD Pipelines with Jenkins
+
+* [Lab 1: Your First Jenkins Pipeline](ci-cd-with-jenkins/lab-1-your-first-jenkins-pipeline.md)
+* [Lab 2: Continuous Integration for a Node.js Application](ci-cd-with-jenkins/lab-2-continuous-integration-for-a-node.js-application.md)
+* [Lab 3: Optional Setup SonarQube and Scan Application Code](ci-cd-with-jenkins/lab-3-optional-setup-sonarqube-and-scan-application-code.md)
+* [Lab 4: SonarQube Integration with a Node.js Application](ci-cd-with-jenkins/lab-4-sonarqube-integration-with-a-node.js-application.md)
+* [Lab 5: Deploy the Node Application on Kubernetes Cluster](ci-cd-with-jenkins/lab-5-deploy-the-node-application-on-kubernetes-cluster.md)
+* [Lab 6: Deploy a Three-Tier Application on EKS Using Jenkins](ci-cd-with-jenkins/lab-6-deploy-a-three-tier-application-on-eks-using-jenkins.md)
+* [Lab 7: Shared Libraries](ci-cd-with-jenkins/lab-7-shared-libraries.md)
+* [Lab 8: Three-Tier Application AWS EKS Jenkins Shared Libraries](ci-cd-with-jenkins/lab-8-three-tier-application-aws-eks-jenkins-shared-libraries.md)
+* [Jenkins Slides](ci-cd-with-jenkins/slides.md)
+
