@@ -1,19 +1,18 @@
-# Summary
+# Table of contents
 
-## 1. Infrastructure as Code with Terraform
-
-* [Lab 1: Provision Your First Infrastructure](iac-with-terraform/lab-1-provision-your-first-infrastructure.md)
-* [Lab 2: Provision AWS VPC](iac-with-terraform/lab-2-provision-aws-vpc.md)
-* [Lab 3: Terraform State File Remote Storage](iac-with-terraform/lab-3-terraform-state-file-remote-storage.md)
-* [Lab 4: Practice Count and For_Each Meta-Arguments in Terraform](iac-with-terraform/lab-4-practice-count-and-for_each-meta-arguments-in-terraform.md)
-* [Lab 5: Building Custom Module](iac-with-terraform/lab-5-building-custom-module.md)
-* [Lab 6: Troubleshooting Terraform Scripts AWS Cloud](iac-with-terraform/lab-6-troubleshooting-terraform-scripts-aws-cloud.md)
-* [Lab 7: Provision an AWS Elastic Kubernetes Service Cluster Using Terraform](iac-with-terraform/lab-7-provision-an-aws-elastic-kubernetes-service-cluster-using-terraform.md)
-* [Lab 8: Provision Infrastructure Using Reusable Modules AWS](iac-with-terraform/lab-8-provision-infrastructure-using-reusable-modules-aws.md)
-* [Lab 9: Terraform Workspaces](iac-with-terraform/lab-9-terraform-workspaces.md)
-* [Lab 10: Publish Terraform Modules as Git Submodules for Easy Distribution](iac-with-terraform/lab-10-publish-terraform-modules-as-git-submodules-for-easy-distribution.md)
-* [Lab 11: Troubleshoot AWS Scripts](iac-with-terraform/lab-11-troubleshoot-aws-scripts.md)
-* [Terraform Slides](iac-with-terraform/slides.md)
+* [Infrastructure as Code - Terraform](README.md)
+  * [Terraform Slides](infrastructure-as-code-terraform/slides.md)
+  * [Lab 1: Provision Your First Infrastructure](infrastructure-as-code-terraform/lab-1-provision-your-first-infrastructure.md)
+  * [Lab 2: Provision AWS VPC](infrastructure-as-code-terraform/lab-2-provision-aws-vpc.md)
+  * [Lab 3: Terraform State File Remote Storage](infrastructure-as-code-terraform/lab-3-terraform-state-file-remote-storage.md)
+  * [Lab 4: Practice Count and For\_Each Meta-Arguments in Terraform](infrastructure-as-code-terraform/lab-4-practice-count-and-for_each-meta-arguments-in-terraform.md)
+  * [Lab 5: Building Custom Module](infrastructure-as-code-terraform/lab-5-building-custom-module.md)
+  * [Lab 6: Troubleshooting Terraform Scripts AWS Cloud](infrastructure-as-code-terraform/lab-6-troubleshooting-terraform-scripts-aws-cloud.md)
+  * [Lab 7: Provision an AWS Elastic Kubernetes Service Cluster Using Terraform](infrastructure-as-code-terraform/lab-7-provision-an-aws-elastic-kubernetes-service-cluster-using-terraform.md)
+  * [Lab 8: Provision Infrastructure Using Reusable Modules AWS](infrastructure-as-code-terraform/lab-8-provision-infrastructure-using-reusable-modules-aws.md)
+  * [Lab 9: Terraform Workspaces](infrastructure-as-code-terraform/lab-9-terraform-workspaces.md)
+  * [Lab 10: Publish Terraform Modules as Git Submodules for Easy Distribution](infrastructure-as-code-terraform/lab-10-publish-terraform-modules-as-git-submodules-for-easy-distribution.md)
+  * [Lab 11: Troubleshoot AWS Scripts](infrastructure-as-code-terraform/lab-11-troubleshoot-aws-scripts.md)
 
 ## 2. Containerization with Docker
 
@@ -58,4 +57,3 @@
 * [Lab 7: Shared Libraries](ci-cd-with-jenkins/lab-7-shared-libraries.md)
 * [Lab 8: Three-Tier Application AWS EKS Jenkins Shared Libraries](ci-cd-with-jenkins/lab-8-three-tier-application-aws-eks-jenkins-shared-libraries.md)
 * [Jenkins Slides](ci-cd-with-jenkins/slides.md)
-
