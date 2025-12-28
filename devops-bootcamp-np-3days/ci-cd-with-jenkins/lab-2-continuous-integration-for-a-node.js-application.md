@@ -1,10 +1,8 @@
-# Lab 2: Continuous Integration for a Node.js Application with Jenkins
+# Lab 2: Continuous Integration for a Node.js Application
 
 Build, Test, Generate Reports, and Publish Artifacts Using Jenkins Pipeline
 
 This lab walks you through creating a complete CI pipeline for a Node.js application using Jenkins. The pipeline will install dependencies, run tests, generate JUnit and coverage reports, and publish build artifacts including a deployment ready ZIP file.
-
----
 
 ## Pre-Requisites
 
@@ -12,12 +10,10 @@ This lab walks you through creating a complete CI pipeline for a Node.js applica
 * Jenkins installed and running (VM, server, or Docker)
 * A Jenkins agent that can run Node builds (Linux recommended)
 * Tools available on the Jenkins agent:
-
   * Git
   * Node.js 18 and Node.js 20 (or ability to install via Jenkins tool configuration)
   * zip
 * Jenkins plugins:
-
   * Pipeline
   * Git
   * NodeJS (recommended)
@@ -27,8 +23,6 @@ This lab walks you through creating a complete CI pipeline for a Node.js applica
 
 Note: If your tests produce `coverage/junit.xml` and coverage reports under `coverage/`, this lab will work as is. If your repo uses a different path, adjust in the Jenkinsfile.
 
----
-
 ## Learning Objectives
 
 1. Understand what CI is and why teams use it.
@@ -37,8 +31,6 @@ Note: If your tests produce `coverage/junit.xml` and coverage reports under `cov
 4. Publish JUnit test results and coverage reports in Jenkins.
 5. Publish CI artifacts including a deployment ZIP package.
 6. Run the pipeline across Node.js versions 18 and 20 (matrix style).
-
----
 
 ## Step 1: Fork and Clone the Application
 
@@ -50,8 +42,6 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
----
-
 ## Step 2: Prepare Jenkins for Node Builds
 
 ### Option A: Install NodeJS tools inside Jenkins (recommended)
@@ -59,7 +49,6 @@ cd <repository-folder>
 1. Jenkins Dashboard -> Manage Jenkins -> Tools
 2. Find NodeJS installations
 3. Add:
-
    * `node-18`
    * `node-20`
 4. If you have internet access from Jenkins, you can enable automatic install.
@@ -75,8 +64,6 @@ zip -v
 ```
 
 If you only have one Node version installed, you can still run the pipeline, but the matrix part will not truly validate both versions.
-
----
 
 ## Step 3: Add a Jenkinsfile to the Repo
 
@@ -252,8 +239,6 @@ git commit -m "Add Jenkins CI pipeline"
 git push
 ```
 
----
-
 ## Step 4: Create the Jenkins Pipeline Job
 
 1. Jenkins -> New Item
@@ -264,7 +249,6 @@ git push
 ### Configure
 
 * Under **Pipeline**:
-
   * Definition: **Pipeline script from SCM**
   * SCM: **Git**
   * Repository URL: your fork URL
@@ -272,8 +256,6 @@ git push
   * Credentials: add if private repo
 
 Click Save.
-
----
 
 ## Step 5: Run the Pipeline
 
@@ -293,13 +275,10 @@ You will also see:
 * Coverage artifacts archived
 * Deployment ZIP archived for download
 
----
-
 ## Step 6: Download and Run the Deployment Artifact
 
 1. Open the Jenkins build page
 2. Under **Artifacts**, download:
-
    * `deployment-package-node-18-<sha>-<timestamp>.zip` or
    * `deployment-package-node-20-<sha>-<timestamp>.zip`
 3. Extract it
@@ -311,8 +290,6 @@ npm start
 ```
 
 5. Access the application in the browser using your machine or VM IP and exposed port.
-
----
 
 ## Understanding the Jenkins Pipeline
 
@@ -327,10 +304,3 @@ npm start
 * Archives coverage folder as an artifact
 * Creates a deployment staging directory and produces a ZIP
 * Archives the ZIP for download
-
-### Mapping from GitHub Actions to Jenkins
-
-* `matrix` -> `parallel { ... }`
-* `actions/upload-artifact` -> `archiveArtifacts`
-* `dorny/test-reporter` -> `junit` publisher in Jenkins
-* `workflow_dispatch` -> manual job trigger (Build Now)

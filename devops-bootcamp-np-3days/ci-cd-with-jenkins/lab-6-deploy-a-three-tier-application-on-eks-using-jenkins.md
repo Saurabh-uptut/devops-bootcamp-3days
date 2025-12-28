@@ -1,6 +1,4 @@
-# Lab 6: Deploy a Three Tier Application on AWS Kubernetes using Jenkins
-
-## Lab Overview
+# Lab 6: Deploy a Three-Tier Application on EKS Using Jenkins
 
 In this lab, you will deploy a complete three tier application on Amazon EKS using Jenkins for CI/CD.
 
@@ -14,9 +12,7 @@ The pipeline will:
 
 ## Application Architecture
 
-Frontend (NGINX static UI)
--> Backend (Node.js API)
--> Database (PostgreSQL)
+Frontend (NGINX static UI) -> Backend (Node.js API) -> Database (PostgreSQL)
 
 ### Service exposure
 
@@ -33,8 +29,6 @@ You will:
 * Build and push container images
 * Deploy Kubernetes manifests to EKS
 * Validate the application end to end
-
----
 
 ## Prerequisites
 
@@ -53,8 +47,6 @@ Recommended:
 * eksctl installed (optional)
 * AWS Load Balancer Controller installed on the EKS cluster (recommended for production, not required for this lab if you use Service type LoadBalancer)
 * ECR repositories created for frontend and backend images
-
----
 
 ## Part 1: Prepare AWS IAM for Jenkins
 
@@ -83,12 +75,9 @@ Also ensure it can call:
 
 Generate access keys for this IAM user and store them securely.
 
----
-
 ## Part 2: Configure Jenkins Credentials
 
-In Jenkins:
-Manage Jenkins -> Credentials -> System -> Global credentials -> Add credentials
+In Jenkins: Manage Jenkins -> Credentials -> System -> Global credentials -> Add credentials
 
 Add:
 
@@ -96,8 +85,8 @@ Add:
 
 * Kind: Username with password
 * ID: `aws-access`
-* Username: AWS_ACCESS_KEY_ID
-* Password: AWS_SECRET_ACCESS_KEY
+* Username: AWS\_ACCESS\_KEY\_ID
+* Password: AWS\_SECRET\_ACCESS\_KEY
 
 ### Credential B: AWS region
 
@@ -115,27 +104,11 @@ If your GitHub repo is private:
 
 * Add GitHub PAT or SSH key credential for checkout
 
----
-
 ## Part 3: Prepare Kubernetes Manifests for AWS
 
 Your repository structure should look like:
 
-.
-├── api/
-├── ui/
-├── k8s_solution/
-│   ├── namespace.yml
-│   ├── db-secret.yml
-│   ├── db-pvc.yml
-│   ├── db-deploy.yml
-│   ├── db-svc.yml
-│   ├── api-deploy.yml
-│   ├── api-svc-lb.yml
-│   ├── ui-configmap.yml
-│   ├── ui-deploy.yml
-│   └── ui-svc-lb.yml
-└── Jenkinsfile
+
 
 ### Update image references to ECR placeholders
 
@@ -153,8 +126,6 @@ image: YOUR_ECR_REGISTRY/frontend-user-management:latest
 
 Later, Jenkins will replace these with the actual tag.
 
----
-
 ## Part 4: Create Amazon ECR Repositories
 
 Create two repositories:
@@ -169,7 +140,7 @@ aws ecr create-repository --repository-name backend-user-management
 aws ecr create-repository --repository-name frontend-user-management
 ```
 
----
+***
 
 ## Part 5: Create Jenkins Pipeline (Jenkinsfile)
 
@@ -358,8 +329,6 @@ git commit -m "Add Jenkins CI/CD pipeline for EKS"
 git push origin main
 ```
 
----
-
 ## Part 6: Create Jenkins Job and Trigger the Pipeline
 
 1. Jenkins -> New Item
@@ -374,8 +343,6 @@ Trigger options:
 
 * Manual: Build Now
 * Automatic: Configure GitHub webhook to trigger on push
-
----
 
 ## Part 7: Verify Deployment
 
@@ -400,11 +367,9 @@ curl http://<BACKEND_LB_DNS>/health
 
 Open frontend:
 
-```text
+```
 http://<FRONTEND_LB_DNS>
 ```
-
----
 
 ## Cleanup
 

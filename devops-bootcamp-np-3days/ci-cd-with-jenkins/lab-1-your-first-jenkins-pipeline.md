@@ -2,8 +2,6 @@
 
 This lab introduces you to Jenkins and guides you through creating your first Pipeline job. You will learn Pipeline syntax, triggers, stages, agents, and common best practices. You will then extend your knowledge by working with parallel builds and scheduled, parameterized runs.
 
----
-
 ## Prerequisites
 
 * Git installed on your machine
@@ -11,7 +9,6 @@ This lab introduces you to Jenkins and guides you through creating your first Pi
 * A GitHub account with valid credentials (repo source)
 * Jenkins installed and running (local VM, Docker, or server)
 * Jenkins plugins:
-
   * Pipeline
   * Git
   * (Recommended) GitHub plugin
@@ -25,8 +22,6 @@ This lab introduces you to Jenkins and guides you through creating your first Pi
 4. Add some text to README.md and commit.
 
 This will serve as the initial content for your repository.
-
----
 
 ## Step 2: Create Your First Jenkins Pipeline (Jenkinsfile)
 
@@ -82,13 +77,11 @@ git push
 In the job configuration:
 
 * Under **Pipeline**:
-
   * Definition: **Pipeline script from SCM**
   * SCM: **Git**
   * Repository URL: paste your repo URL
   * Branch: `*/main`
 * If the repository is private:
-
   * Add **Credentials** (Username/Password or GitHub token).
 
 Click **Save**.
@@ -101,15 +94,12 @@ Click **Save**.
 
 You should see the echo output from both stages.
 
----
-
 ## Step 3: Modify the Pipeline to Run Only Manually
 
 In GitHub Actions you removed push triggers. In Jenkins, the equivalent is: do not configure webhooks, polling, or scheduled triggers.
 
 1. Go to Jenkins job → **Configure**
 2. Ensure you DO NOT enable:
-
    * **GitHub hook trigger for GITScm polling**
    * **Poll SCM**
    * **Build periodically**
@@ -118,16 +108,11 @@ Save.
 
 Now the job runs only when you click **Build Now**.
 
-Tip: If you previously added a webhook in GitHub, remove it:
-Repo → Settings → Webhooks → delete Jenkins webhook (optional).
-
----
+Tip: If you previously added a webhook in GitHub, remove it: Repo → Settings → Webhooks → delete Jenkins webhook (optional).
 
 ## Step 4: More Examples in Jenkins
 
 ### Example 1: Matrix-like Builds using Parallel Stages
-
-GitHub Actions “matrix” runs combinations automatically. In Jenkins, you can achieve similar results using `parallel` and variables.
 
 Update your `Jenkinsfile` to this:
 
@@ -182,16 +167,9 @@ What you will observe:
 
 * The “Matrix Build” runs multiple branches in parallel (similar to matrix jobs).
 
-Note: If you truly want different OS runs (Linux vs Windows), you need Jenkins agents for each OS and use `agent { label 'windows' }` per stage. That is optional for this intro lab.
-
----
+Note: If you truly want different OS runs (Linux vs Windows), you need Jenkins agents for each OS and use `agent { label 'windows' }` per stage.&#x20;
 
 ### Example 2: Scheduled and Parameterized Pipeline
-
-GitHub Actions used:
-
-* a cron schedule
-* manual trigger with inputs
 
 In Jenkins, use:
 
@@ -242,7 +220,6 @@ Commit and push.
 
 1. Jenkins job page: click **Build with Parameters**
 2. Select:
-
    * ENVIRONMENT = `staging`
    * MESSAGE = `Testing manual run`
 3. Click **Build**
@@ -256,8 +233,6 @@ Commit and push.
 If you want it to be exactly Monday 00:00 without hashing:
 
 * Use `cron('0 0 * * 1')`
-
----
 
 ## Completion
 

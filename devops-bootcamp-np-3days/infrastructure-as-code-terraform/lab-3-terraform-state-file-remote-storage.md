@@ -1,13 +1,13 @@
-# Lab: Store Terraform State Remotely in AWS S3 with DynamoDB State Locking
+# Lab 3: Store Terraform State Remotely in AWS S3 with DynamoDB State Locking
 
-## Goal
+### Goal
 
 Move your Terraform state (`terraform.tfstate`) from local disk to:
 
 * **Amazon S3** for centralized, durable remote state storage
 * **Amazon DynamoDB** for **state locking** (prevents two people or pipelines from applying at the same time)
 
-## Learning Objectives
+### Learning Objectives
 
 By the end of this lab, you will be able to:
 
@@ -17,15 +17,14 @@ By the end of this lab, you will be able to:
 * Initialize Terraform with remote backend
 * Apply infrastructure and confirm locking and remote state storage
 
----
+***
 
-## Prerequisites
+### Prerequisites
 
 * AWS account (free tier or paid)
 * Terraform installed
 * AWS CLI installed and configured (`aws configure`)
 * IAM user/role that can create and manage:
-
   * S3 bucket (read/write, list)
   * DynamoDB table (read/write)
   * Any infrastructure you provision (example: EC2)
@@ -37,9 +36,9 @@ Validate AWS access:
 aws sts get-caller-identity
 ```
 
----
+***
 
-## Important concept
+### Important concept
 
 Terraform backend resources (S3 bucket, DynamoDB table) must exist **before** Terraform can use them as a backend.
 
@@ -48,11 +47,11 @@ So this lab has two stages:
 1. Create S3 bucket and DynamoDB table (bootstrap)
 2. Configure Terraform backend to use them and deploy an example resource
 
----
+***
 
-# Stage 1: Create S3 bucket and DynamoDB table
+## Stage 1: Create S3 bucket and DynamoDB table
 
-## Step 1: Choose names
+### Step 1: Choose names
 
 Pick globally unique names:
 
@@ -65,9 +64,9 @@ Example values used below:
 * Table: `terraform-state-locks`
 * Region: `us-east-1`
 
----
+***
 
-## Step 2: Create S3 bucket (AWS CLI)
+### Step 2: Create S3 bucket (AWS CLI)
 
 For `us-east-1`, create bucket like this:
 
@@ -97,9 +96,9 @@ aws s3api put-bucket-encryption \
   }'
 ```
 
----
+***
 
-## Step 3: Create DynamoDB table for locking (AWS CLI)
+### Step 3: Create DynamoDB table for locking (AWS CLI)
 
 The table must have:
 
@@ -123,11 +122,11 @@ aws dynamodb describe-table \
   --region us-east-1
 ```
 
----
+***
 
-# Stage 2: Configure Terraform to use the S3 backend and deploy a resource
+## Stage 2: Configure Terraform to use the S3 backend and deploy a resource
 
-## Step 4: Create project directory
+### Step 4: Create project directory
 
 Create a folder:
 
@@ -137,9 +136,9 @@ remote-state-example
 
 Open it in VS Code.
 
----
+***
 
-## Step 5: Create `providers.tf` with backend configuration
+### Step 5: Create `providers.tf` with backend configuration
 
 Create `providers.tf`:
 
@@ -179,11 +178,11 @@ What this does:
 * Stores state as an S3 object at: `s3://<bucket>/terraform.tfstate`
 * Uses DynamoDB table to lock state during `plan` and `apply`
 
----
+***
 
-## Step 6: Create variables and tfvars for an example EC2
+### Step 6: Create variables and tfvars for an example EC2
 
-### Create `variables.tf`
+#### Create `variables.tf`
 
 ```hcl
 variable "instance_type" {
@@ -193,7 +192,7 @@ variable "instance_type" {
 }
 ```
 
-### Create `main.tf` (EC2 example)
+#### Create `main.tf` (EC2 example)
 
 Use a data source to fetch a recent Ubuntu image automatically (recommended over hardcoding AMIs):
 
@@ -223,7 +222,7 @@ resource "aws_instance" "web_server" {
 }
 ```
 
-### Optional: Create `outputs.tf`
+#### Optional: Create `outputs.tf`
 
 ```hcl
 output "instance_public_ip" {
@@ -232,9 +231,9 @@ output "instance_public_ip" {
 }
 ```
 
----
+***
 
-## Step 7: Run Terraform workflow
+### Step 7: Run Terraform workflow
 
 From inside `remote-state-example`:
 
@@ -268,15 +267,15 @@ Apply:
 terraform apply
 ```
 
----
+***
 
-## Step 8: Verify state locking and remote state file
+### Step 8: Verify state locking and remote state file
 
-### 1) Confirm locking message during apply
+#### 1) Confirm locking message during apply
 
 During `terraform apply`, Terraform should show messages related to acquiring a state lock (wording varies by version). This indicates DynamoDB locking is active.
 
-### 2) Confirm state stored in S3
+#### 2) Confirm state stored in S3
 
 List the object:
 
@@ -293,33 +292,29 @@ You can also verify in AWS Console:
 * S3 bucket contains `terraform.tfstate`
 * DynamoDB table exists and is used for locking
 
----
+***
 
-## Common Issues and Fixes
+### Common Issues and Fixes
 
-### Bucket does not exist
+#### Bucket does not exist
 
-Backend initialization fails if the bucket is missing.
-Fix: Create bucket first (Stage 1).
+Backend initialization fails if the bucket is missing. Fix: Create bucket first (Stage 1).
 
-### DynamoDB table schema wrong
+#### DynamoDB table schema wrong
 
-Locking requires partition key `LockID` (String).
-Fix: Recreate table with the correct key.
+Locking requires partition key `LockID` (String). Fix: Recreate table with the correct key.
 
-### Access denied
+#### Access denied
 
-IAM user lacks required permissions.
-Fix: Ensure permissions for S3 and DynamoDB, plus the resources you are creating.
+IAM user lacks required permissions. Fix: Ensure permissions for S3 and DynamoDB, plus the resources you are creating.
 
-### Region mismatch
+#### Region mismatch
 
-If backend region and provider region are inconsistent, it can confuse teams.
-Fix: Keep `backend "s3" { region = ... }` and `provider "aws" { region = ... }` aligned unless you intentionally separate them.
+If backend region and provider region are inconsistent, it can confuse teams. Fix: Keep `backend "s3" { region = ... }` and `provider "aws" { region = ... }` aligned unless you intentionally separate them.
 
----
+***
 
-## Cleanup
+### Cleanup
 
 If you want to remove the EC2 instance:
 

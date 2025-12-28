@@ -1,4 +1,4 @@
-# Lab 5: Deploy the Node Application on an AWS Kubernetes Cluster using Jenkins
+# Lab 5: Deploy the Node Application on Kubernetes Cluster
 
 ## Lab Overview
 
@@ -15,9 +15,7 @@ The pipeline will:
 
 ## Application Architecture
 
-Frontend (NGINX static UI)
--> Backend (Node.js API)
--> Database (PostgreSQL)
+Frontend (NGINX static UI) -> Backend (Node.js API) -> Database (PostgreSQL)
 
 ### Service exposure
 
@@ -34,8 +32,6 @@ You will:
 * Build and push container images
 * Deploy Kubernetes manifests to EKS
 * Validate the application end to end
-
----
 
 ## Prerequisites
 
@@ -55,8 +51,6 @@ Recommended AWS services:
 * ECR for container images
 * EKS for Kubernetes
 * IAM for authentication
-
----
 
 ## Part 1: Prepare AWS IAM Access for Jenkins
 
@@ -88,8 +82,6 @@ Also ensure the IAM user can call `eks:DescribeCluster`.
 
 Store them securely.
 
----
-
 ## Part 2: Configure Jenkins Credentials
 
 In Jenkins:
@@ -101,8 +93,8 @@ In Jenkins:
 
 * Kind: Username with password
 * ID: `aws-access`
-* Username: AWS_ACCESS_KEY_ID
-* Password: AWS_SECRET_ACCESS_KEY
+* Username: AWS\_ACCESS\_KEY\_ID
+* Password: AWS\_SECRET\_ACCESS\_KEY
 
 ### Credential 2: AWS Region
 
@@ -121,27 +113,13 @@ Optional:
 * ECR registry URL as secret text (or calculate it in pipeline)
 * GitHub credentials if repo is private
 
----
-
 ## Part 3: Prepare Kubernetes Manifests for AWS
 
 Your repository structure should look like:
 
-.
-├── api/
-├── ui/
-├── k8s_solution/
-│   ├── namespace.yml
-│   ├── db-secret.yml
-│   ├── db-pvc.yml
-│   ├── db-deploy.yml
-│   ├── db-svc.yml
-│   ├── api-deploy.yml
-│   ├── api-svc-lb.yml
-│   ├── ui-configmap.yml
-│   ├── ui-deploy.yml
-│   └── ui-svc-lb.yml
-└── Jenkinsfile
+```
+// Some code
+```
 
 ### Update image references to ECR placeholders
 
@@ -153,8 +131,6 @@ image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/frontend-user-managem
 ```
 
 You can keep placeholders and replace them during the pipeline using sed, or commit actual values.
-
----
 
 ## Part 4: Create ECR Repositories
 
@@ -175,8 +151,6 @@ Confirm:
 ```bash
 aws ecr describe-repositories
 ```
-
----
 
 ## Part 5: Create Jenkins Pipeline (Jenkinsfile)
 
@@ -354,8 +328,6 @@ git commit -m "Add Jenkins CI/CD pipeline for EKS"
 git push origin main
 ```
 
----
-
 ## Part 6: Create Jenkins Job and Trigger Pipeline
 
 1. Jenkins -> New Item
@@ -369,8 +341,6 @@ Trigger:
 
 * Click Build Now
 * Or configure a GitHub webhook to trigger builds on push
-
----
 
 ## Part 7: Verify Deployment
 
@@ -403,11 +373,9 @@ curl http://<BACKEND_LB_DNS>/health
 
 Open frontend in browser:
 
-```text
+```
 http://<FRONTEND_LB_DNS>
 ```
-
----
 
 ## Cleanup
 

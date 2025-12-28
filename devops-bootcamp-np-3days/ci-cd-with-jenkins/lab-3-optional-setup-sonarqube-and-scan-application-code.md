@@ -1,16 +1,12 @@
-# Lab 3: (Optional) Setup SonarQube and Scan Application Code
+# Lab 3: Optional Setup SonarQube and Scan Application Code
 
-In this lab, you will set up the open-source SonarQube platform using Docker and Docker Compose. You will then manually scan a Java application, analyze the scan report, and understand common issues such as vulnerabilities, code smells, and bugs.
-
-***
+In this lab, you will set up the open-source SonarQube platform using Docker and Docker Compose. You will then manually scan a Java application, analyze the scan report, and understand common issues such as vulnerabilities, code smells, and bugs
 
 ### Learning Objectives
 
 1. Install and run SonarQube using Docker and Docker Compose
 2. Perform a manual code scan of a Java application
 3. Understand the results produced by SonarQube, including code quality metrics and security findings
-
-***
 
 ### Prerequisites
 
@@ -25,8 +21,6 @@ To allow Docker commands without sudo, run:
 sudo usermod -aG docker $USER
 newgrp docker
 ```
-
-***
 
 ## Step-by-Step Guide
 
@@ -68,8 +62,6 @@ You will be prompted to change the password. Set a new password of your choice.
 
 You should now see the SonarQube welcome dashboard.
 
-***
-
 ### Step 2: Create a New Project for Manual Code Scanning
 
 1. In SonarQube, click **Create a project** or **Create a local project**.
@@ -92,8 +84,6 @@ mvn clean verify sonar:sonar \
 ```
 
 Save this command for later.
-
-***
 
 ### Step 3: Prepare the Java Application for Scanning
 
@@ -119,8 +109,6 @@ Verify Maven installation:
 mvn -version
 ```
 
-***
-
 ### Step 4: Scan the Java Application
 
 1. Navigate into the Java application directory.
@@ -139,8 +127,6 @@ mvn clean verify sonar:sonar \
 ```
 
 3. The build and scan will take a few minutes. Once complete, return to the SonarQube dashboard.
-
-***
 
 ### Step 5: Explore SonarQube Analysis Results
 
@@ -180,13 +166,9 @@ Percentage of code that is duplicated.
 * Affected file and line number
 * Suggested fix or remediation guidance
 
-***
-
 ### Step 6: Validate Successful Scan
 
 If the project appears on the SonarQube dashboard with analysis results, your SonarQube setup and scan were successful.
-
-***
 
 ### Completion
 

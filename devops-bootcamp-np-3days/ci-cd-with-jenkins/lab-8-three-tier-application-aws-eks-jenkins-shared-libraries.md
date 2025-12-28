@@ -1,4 +1,4 @@
-# Lab: Deploy a Three-Tier Application on AWS EKS using Jenkins Shared Libraries
+# Lab 8: Three-Tier Application AWS EKS Jenkins Shared Libraries
 
 ## Lab Objective
 
@@ -10,21 +10,15 @@ Instead of writing a long Jenkinsfile, you will:
 * Keep the Jenkinsfile clean and readable
 * Reuse the same library across multiple applications
 
----
-
 ## Application Architecture
 
-Frontend (NGINX static UI)
-→ Backend (Node.js API)
-→ Database (PostgreSQL)
+Frontend (NGINX static UI) → Backend (Node.js API) → Database (PostgreSQL)
 
 ### Kubernetes Service Exposure
 
 * PostgreSQL: `ClusterIP`
 * Backend API: `LoadBalancer`
 * Frontend UI: `LoadBalancer`
-
----
 
 ## What You Will Build
 
@@ -37,8 +31,6 @@ You will:
 * Deploy Kubernetes manifests to EKS
 * Validate the application end to end
 
----
-
 ## Prerequisites
 
 You must already have:
@@ -47,16 +39,12 @@ You must already have:
 * Jenkins server with a Linux agent
 * Docker, AWS CLI, kubectl installed on the Jenkins agent
 * Git repository with:
-
   * `api/`
   * `ui/`
   * `k8s_solution/`
 * Amazon ECR repositories:
-
   * `backend-user-management`
   * `frontend-user-management`
-
----
 
 ## PART 1: Create Jenkins Shared Library
 
@@ -86,8 +74,6 @@ jenkins-eks-shared-library/
 └── README.md
 ```
 
----
-
 ## PART 2: Implement Shared Library Steps
 
 ### Step 2.1: AWS Account Resolution
@@ -105,8 +91,6 @@ def call() {
 }
 ```
 
----
-
 ### Step 2.2: Login to Amazon ECR
 
 `vars/ecrLogin.groovy`
@@ -121,8 +105,6 @@ def call() {
     '''
 }
 ```
-
----
 
 ### Step 2.3: Build and Push Docker Image
 
@@ -143,8 +125,6 @@ def call(String appDir, String repoName) {
 }
 ```
 
----
-
 ### Step 2.4: Configure kubectl for EKS
 
 `vars/configureEksKubectl.groovy`
@@ -158,8 +138,6 @@ def call(String clusterName) {
     """
 }
 ```
-
----
 
 ### Step 2.5: Render Kubernetes Manifests
 
@@ -182,8 +160,6 @@ def call(String manifestDir, String renderDir) {
 }
 ```
 
----
-
 ### Step 2.6: Deploy to EKS
 
 `vars/deployManifests.groovy`
@@ -199,8 +175,6 @@ def call(String renderDir) {
 }
 ```
 
----
-
 ### Step 2.7: Push the Shared Library
 
 ```bash
@@ -208,8 +182,6 @@ git add .
 git commit -m "Initial Jenkins shared library for EKS deployments"
 git push origin main
 ```
-
----
 
 ## PART 3: Configure Shared Library in Jenkins
 
@@ -226,8 +198,6 @@ Configuration:
 * Credentials: if required
 
 Save.
-
----
 
 ## PART 4: Jenkinsfile (Thin and Clean)
 
@@ -296,8 +266,6 @@ pipeline {
 }
 ```
 
----
-
 ## PART 5: Run the Pipeline
 
 1. Jenkins → New Item
@@ -307,8 +275,6 @@ pipeline {
 5. Repo URL → your application repo
 6. Branch: `main`
 7. Save → Build Now
-
----
 
 ## PART 6: Verify Deployment
 
@@ -325,21 +291,17 @@ curl http://<BACKEND_LB_DNS>/health
 
 Open frontend:
 
-```text
+```
 http://<FRONTEND_LB_DNS>
 ```
 
----
-
 ## Why Shared Libraries Matter (Key Learning)
 
-* Jenkinsfile reduced from 300+ lines to ~50 lines
+* Jenkinsfile reduced from 300+ lines to \~50 lines
 * CI/CD logic is reusable across teams
 * Changes happen in one place
 * Cleaner reviews and safer pipelines
 * Enterprise-grade Jenkins design
-
----
 
 ## Lab Completion Criteria
 

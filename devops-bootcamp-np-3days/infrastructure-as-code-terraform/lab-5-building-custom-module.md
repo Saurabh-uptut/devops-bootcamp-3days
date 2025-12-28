@@ -1,11 +1,6 @@
-# Challenge Lab: Multi-Region Payroll Application Deployment on AWS using Terraform
+# Lab 8: Building Custom Module
 
-## Lab Type
-
-Challenge Lab
-No solution or reference implementation is provided. Learners are expected to design and implement the Terraform configuration independently.
-
----
+This is a challenge lab so no solutions are provided
 
 ## Scenario
 
@@ -15,20 +10,17 @@ Each country must run its **own isolated instance** of the Payroll application, 
 
 You are responsible for creating a **reusable and scalable Terraform-based solution** that enables this multi-country deployment model.
 
----
+***
 
 ## Architecture Overview
 
 Each country deployment must include:
 
 * One EC2 instance running the Payroll application
-
   * Uses a **custom AMI** provided by the organization
 * One DynamoDB table
-
   * Stores employee and payroll financial data
 * One S3 bucket
-
   * Stores tax documents and other payroll-related files
 * Users access the application via the EC2 instance
 * AWS **default VPC and default subnets** must be used
@@ -36,7 +28,7 @@ Each country deployment must include:
 
 This is a deliberately simplified architecture to focus on **Terraform design, reuse, and scalability**, not networking complexity.
 
----
+***
 
 ## Goal
 
@@ -46,7 +38,7 @@ Design and implement a Terraform solution that can deploy the Payroll applicatio
 * Naming collisions are avoided
 * The solution is easy to extend to new countries
 
----
+***
 
 ## Learning Objectives
 
@@ -59,7 +51,7 @@ By completing this challenge, you will demonstrate the ability to:
 * Apply consistent naming and tagging strategies
 * Use the default AWS VPC and subnets correctly
 
----
+***
 
 ## Constraints and Rules
 
@@ -69,7 +61,6 @@ You must adhere to the following rules:
 2. Do not create a custom VPC or subnets
 3. Use the **default VPC and default subnets**
 4. Each country must have:
-
    * Its own EC2 instance
    * Its own DynamoDB table
    * Its own S3 bucket
@@ -78,7 +69,7 @@ You must adhere to the following rules:
 7. No hardcoded country-specific logic scattered across files
 8. No manual resource creation via AWS Console
 
----
+***
 
 ## High-Level Tasks
 
@@ -119,7 +110,6 @@ You are expected to complete the following tasks independently:
 
 * Apply meaningful tags to all resources
 * Tags must include at least:
-
   * Application name
   * Country
   * Environment
@@ -131,7 +121,7 @@ You are expected to complete the following tasks independently:
 * Apply the configuration successfully
 * Verify resources in the AWS Console
 
----
+***
 
 ## Verification Criteria
 
@@ -143,7 +133,7 @@ Your solution will be considered complete when:
 * Terraform plan clearly shows per-country resource separation
 * Infrastructure is deployed successfully without manual intervention
 
----
+***
 
 ## Optional Extension Challenges
 
@@ -154,7 +144,7 @@ Attempt these only after completing the core lab:
 * Add basic IAM roles or policies for EC2 access to S3 and DynamoDB
 * Convert the solution into a reusable Terraform module
 
----
+***
 
 ## Deliverables
 
@@ -163,10 +153,10 @@ Attempt these only after completing the core lab:
 * Successful Terraform apply output
 * Ability to explain your design decisions
 
----
+***
 
 ## Cleanup
 
 After validation, destroy all created infrastructure using Terraform to avoid unnecessary AWS charges.
 
----
+***

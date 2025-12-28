@@ -1,17 +1,17 @@
 # Lab 5: Building Reusable Components in Terraform on AWS
 
-## Learning objectives
+### Learning objectives
 
 * Build reusable resources using `for_each`
 * Build reusable parts of resources using `dynamic` blocks
 
-## Prerequisite
+### Prerequisite
 
 Complete a basic Terraform lab where you have deployed at least one EC2 instance on AWS (AWS CLI configured, Terraform working, IAM permissions ready).
 
----
+***
 
-## Target architecture
+### Target architecture
 
 * 1 VPC
 * Multiple subnets in the same VPC
@@ -20,9 +20,9 @@ Complete a basic Terraform lab where you have deployed at least one EC2 instance
 * Public subnet(s) route to Internet Gateway
 * Private subnet(s) do not have a default route to the internet
 
----
+***
 
-## Folder structure
+### Folder structure
 
 ```
 .
@@ -38,22 +38,22 @@ Complete a basic Terraform lab where you have deployed at least one EC2 instance
 └── locals.tf
 ```
 
----
+***
 
-# Task 0: Project setup
+## Task 0: Project setup
 
-## Step 1: Create project directory
+### Step 1: Create project directory
 
 ```bash
 mkdir lab5_reusable_aws
 cd lab5_reusable_aws
 ```
 
----
+***
 
-# Task 1: Create multiple subnets using `for_each`
+## Task 1: Create multiple subnets using `for_each`
 
-## 1) provider.tf
+### 1) provider.tf
 
 Create `provider.tf`:
 
@@ -74,7 +74,7 @@ provider "aws" {
 }
 ```
 
-## 2) variables.tf (add subnet variable)
+### 2) variables.tf (add subnet variable)
 
 Add to `variables.tf`:
 
@@ -101,7 +101,7 @@ variable "subnets" {
 }
 ```
 
-## 3) terraform.tfvars (subnets)
+### 3) terraform.tfvars (subnets)
 
 Create `terraform.tfvars`:
 
@@ -124,7 +124,7 @@ subnets = {
 }
 ```
 
-## 4) network.tf (VPC + IGW)
+### 4) network.tf (VPC + IGW)
 
 Create `network.tf`:
 
@@ -148,7 +148,7 @@ resource "aws_internet_gateway" "igw" {
 }
 ```
 
-## 5) subnet.tf (for_each)
+### 5) subnet.tf (for\_each)
 
 Create `subnet.tf`:
 
@@ -168,7 +168,7 @@ resource "aws_subnet" "subnet" {
 }
 ```
 
-### Common issue you will hit (and why)
+#### Common issue you will hit (and why)
 
 If older code referenced a single subnet like:
 
@@ -178,7 +178,7 @@ subnet_id = aws_subnet.subnet.id
 
 Terraform will fail because `aws_subnet.subnet` is now a map of resources.
 
-### Temporary fix
+#### Temporary fix
 
 Pick one subnet key explicitly:
 
@@ -188,13 +188,13 @@ subnet_id = aws_subnet.subnet["public-subnet"].id
 
 Later (Task 3) you will do the correct fix by selecting the subnet per instance using `each.value.subnet`.
 
----
+***
 
-# Task 2: Create multiple inbound rules using a `dynamic` block (Security Group)
+## Task 2: Create multiple inbound rules using a `dynamic` block (Security Group)
 
 On AWS, the equivalent of a firewall in this context is a Security Group.
 
-## 1) variables.tf (add ingress variable)
+### 1) variables.tf (add ingress variable)
 
 Add to `variables.tf`:
 
@@ -211,7 +211,7 @@ variable "ingress" {
 }
 ```
 
-## 2) terraform.tfvars (ingress rules)
+### 2) terraform.tfvars (ingress rules)
 
 Add to `terraform.tfvars`:
 
@@ -241,7 +241,7 @@ ingress = [
 ]
 ```
 
-## 3) locals.tf (optional common tags)
+### 3) locals.tf (optional common tags)
 
 Create `locals.tf`:
 
@@ -253,7 +253,7 @@ locals {
 }
 ```
 
-## 4) security_group.tf (dynamic ingress)
+### 4) security\_group.tf (dynamic ingress)
 
 Create `security_group.tf`:
 
@@ -288,11 +288,11 @@ resource "aws_security_group" "app_sg" {
 }
 ```
 
----
+***
 
-# Task 2.5: Route tables for public and private subnets
+## Task 2.5: Route tables for public and private subnets
 
-## routes.tf
+### routes.tf
 
 Create `routes.tf`:
 
@@ -326,11 +326,11 @@ resource "aws_route_table_association" "subnet_assoc" {
 }
 ```
 
----
+***
 
-# Task 3: Create multiple EC2 instances using `for_each`
+## Task 3: Create multiple EC2 instances using `for_each`
 
-## 1) variables.tf (instances map)
+### 1) variables.tf (instances map)
 
 Add to `variables.tf`:
 
@@ -345,7 +345,7 @@ variable "ec2_instances" {
 }
 ```
 
-## 2) terraform.tfvars (instances definition)
+### 2) terraform.tfvars (instances definition)
 
 Add to `terraform.tfvars`:
 
@@ -365,7 +365,7 @@ ec2_instances = {
 }
 ```
 
-## 3) ec2_instance.tf (for_each + correct subnet selection)
+### 3) ec2\_instance.tf (for\_each + correct subnet selection)
 
 Create `ec2_instance.tf`:
 
@@ -403,11 +403,11 @@ resource "aws_instance" "vm" {
 
 This is the correct fix for Task 1. Each VM chooses its subnet from the subnet map using the subnet key.
 
----
+***
 
-# Outputs: Multiple public and private IPs
+## Outputs: Multiple public and private IPs
 
-## outputs.tf
+### outputs.tf
 
 Create `outputs.tf`:
 
@@ -430,9 +430,9 @@ output "private_ip_addresses" {
 }
 ```
 
----
+***
 
-# Terraform workflow
+## Terraform workflow
 
 Run these in order:
 
@@ -444,30 +444,27 @@ terraform plan
 terraform apply --auto-approve
 ```
 
----
+***
 
-## Expected outcome
+### Expected outcome
 
 * VPC created
 * Two subnets created: `public-subnet`, `private-subnet`
 * Route tables configured:
-
   * public subnet has a default route to the internet via IGW
   * private subnet has no internet default route
 * Two EC2 instances created: one per subnet
 * Security group has three ingress rules created via `dynamic`:
-
   * tcp 22
   * tcp 8080
   * icmp
 * Outputs show:
-
   * list of public IPs (only for instances with public IPs)
   * list of private IPs (for all instances)
 
----
+***
 
-## Cleanup
+### Cleanup
 
 ```bash
 terraform destroy --auto-approve

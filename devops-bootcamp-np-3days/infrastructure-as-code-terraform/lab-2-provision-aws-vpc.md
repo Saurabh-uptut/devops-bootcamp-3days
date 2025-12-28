@@ -1,4 +1,4 @@
-# Lab: Provision an AWS VPC 
+# Lab 2: Provision AWS VPC
 
 ## Goal
 
@@ -9,7 +9,6 @@ Provision a complete VPC setup on AWS with:
 * 1 Private subnet (no direct Internet route)
 * 2 Security Groups (public and private)
 * 2 EC2 instances
-
   * Public EC2 runs Apache and is reachable over HTTP
   * Private EC2 has no public IP and is reachable only via SSH from the public EC2
 * 1 Custom Network ACL (NACL) applied to both subnets
@@ -25,17 +24,16 @@ By the end of this lab, you will be able to:
 * Apply and understand NACL rules and subnet associations
 * Use Terraform outputs to retrieve the public IP for verification
 
----
+***
 
 ## Prerequisites
 
 * AWS account (free tier or paid)
 * IAM credentials with permissions for: VPC, EC2, Internet Gateway, Route Tables, Security Groups, Network ACL
-* Terraform installed (Terraform v1.14.3 is current per HashiCorp install page) ([HashiCorp Developer][1])
+* Terraform installed (Terraform v1.14.3 is current per HashiCorp install page) ([HashiCorp Developer](https://developer.hashicorp.com/terraform/install?utm_source=chatgpt.com))
 * AWS CLI installed and configured
 * VS Code (or any IDE)
 * An existing EC2 Key Pair in the target region (recommended)
-
   * You must know its name (example: `myKey`)
   * You must have its `.pem` private key locally to SSH
 
@@ -53,22 +51,20 @@ Validate:
 aws sts get-caller-identity
 ```
 
----
+***
 
 ## Architecture (Text View)
 
 * **VPC**: `10.0.0.0/16`
 * **Public Subnet**: `10.1.0.0/24` in `us-east-1a`
-
   * Route table has `0.0.0.0/0` to Internet Gateway
   * Public EC2 has a public IP, allows HTTP (80) and SSH (22)
 * **Private Subnet**: `10.2.0.0/24` in `us-east-1b`
-
   * Route table has only local VPC routing (no Internet route)
   * Private EC2 has no public IP, allows SSH only from public security group
 * **NACL**: Custom rules applied to both subnets (stateless control)
 
----
+***
 
 ## Project Structure
 
@@ -89,12 +85,11 @@ vpc/
   outputs.tf
 ```
 
----
+***
 
 ## Step 1: Create providers.tf (latest provider range)
 
-The latest AWS provider release is 6.27.0 (Dec 17, 2025). ([GitHub][2])
-Use a safe constraint that stays within major version 6.
+The latest AWS provider release is 6.27.0 (Dec 17, 2025). ([GitHub](https://github.com/hashicorp/terraform-provider-aws/releases?utm_source=chatgpt.com)) Use a safe constraint that stays within major version 6.
 
 **providers.tf**
 
@@ -115,7 +110,7 @@ provider "aws" {
 }
 ```
 
----
+***
 
 ## Step 2: Create variables.tf
 
@@ -178,7 +173,7 @@ variable "allowed_ssh_cidr" {
 }
 ```
 
----
+***
 
 ## Step 3: Create terraform.tfvars
 
@@ -202,7 +197,7 @@ key_name         = "myKey"
 allowed_ssh_cidr = "0.0.0.0/0"
 ```
 
----
+***
 
 ## Step 4: Create the VPC
 
@@ -220,7 +215,7 @@ resource "aws_vpc" "myVpc" {
 }
 ```
 
----
+***
 
 ## Step 5: Create subnets
 
@@ -250,7 +245,7 @@ resource "aws_subnet" "private_subnet" {
 }
 ```
 
----
+***
 
 ## Step 6: Create Internet Gateway
 
@@ -266,7 +261,7 @@ resource "aws_internet_gateway" "gw" {
 }
 ```
 
----
+***
 
 ## Step 7: Create route tables and associations
 
@@ -307,13 +302,13 @@ resource "aws_route_table_association" "private_association" {
 }
 ```
 
----
+***
 
 ## Step 8: Create Security Groups (correct rules)
 
 Key correction: For “private allows SSH only from public machines”, the safest and standard way is referencing the public Security Group, not using subnet CIDR.
 
-**security_group.tf**
+**security\_group.tf**
 
 ```hcl
 resource "aws_security_group" "public_security_group" {
@@ -377,7 +372,7 @@ resource "aws_security_group" "private_security_group" {
 }
 ```
 
----
+***
 
 ## Step 9: Create Network ACL (NACL) and associate to subnets
 
@@ -476,13 +471,13 @@ resource "aws_network_acl_rule" "out_all" {
 }
 ```
 
----
+***
 
 ## Step 10: Create EC2 instances (with latest Ubuntu AMI via data source)
 
 Instead of hardcoding AMI IDs (which change), use a data source to fetch the latest Ubuntu 24.04 LTS for the region.
 
-**ec2_instance.tf**
+**ec2\_instance.tf**
 
 ```hcl
 data "aws_ami" "ubuntu_2404" {
@@ -546,7 +541,7 @@ resource "aws_instance" "private_ec2" {
 }
 ```
 
----
+***
 
 ## Step 11: Output values
 
@@ -564,7 +559,7 @@ output "private_ip_address" {
 }
 ```
 
----
+***
 
 ## Step 12: Execute the Terraform workflow
 
@@ -578,7 +573,7 @@ terraform plan
 terraform apply
 ```
 
----
+***
 
 ## Verification
 
@@ -588,7 +583,7 @@ After apply, Terraform prints `public_ip_address`.
 
 Open in browser:
 
-```text
+```
 http://<public_ip_address>
 ```
 
@@ -621,24 +616,10 @@ If SSH fails, check:
 * NACL rules allow SSH and ephemeral ports
 * Security group rules are correct
 
----
+***
 
 ## Cleanup (avoid charges)
 
 ```bash
 terraform destroy
 ```
-
----
-
-## Notes for teaching and best practices
-
-* In real environments, never keep `allowed_ssh_cidr = "0.0.0.0/0"`. Restrict it to your public IP `/32`.
-* Private subnet instances are private because:
-
-  * no public IP mapping
-  * no route to Internet Gateway
-* Security Groups are stateful; NACLs are stateless, so you must allow return traffic explicitly (ephemeral ports).
-
-[1]: https://developer.hashicorp.com/terraform/install?utm_source=chatgpt.com "Install | Terraform"
-[2]: https://github.com/hashicorp/terraform-provider-aws/releases?utm_source=chatgpt.com "Releases · hashicorp/terraform-provider-aws"

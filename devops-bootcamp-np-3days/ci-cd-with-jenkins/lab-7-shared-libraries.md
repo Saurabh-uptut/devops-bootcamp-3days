@@ -1,16 +1,10 @@
-Below is a **clean, step-by-step lab** for **Jenkins Shared Libraries**, written in a clear instructional format and ready to be used in training or self-practice.
+# Lab 7: Shared Libraries
 
----
-
-# Lab: Creating and Using Jenkins Shared Libraries
-
-## Lab Objective
+### Lab Objective
 
 In this lab, you will create a **Jenkins Shared Library**, publish it to Git, configure it in Jenkins, and use it inside a Jenkins Pipeline to reuse common pipeline logic.
 
----
-
-## What You Will Learn
+### What You Will Learn
 
 By the end of this lab, you will be able to:
 
@@ -20,9 +14,7 @@ By the end of this lab, you will be able to:
 * Configure a shared library globally in Jenkins
 * Import and use the shared library inside a Jenkins Pipeline
 
----
-
-## Prerequisites
+### Prerequisites
 
 * Jenkins installed and running
 * Access to **Manage Jenkins**
@@ -30,13 +22,11 @@ By the end of this lab, you will be able to:
 * Basic knowledge of Jenkins Pipelines and Groovy
 * Git installed locally
 
----
-
-## Step 1: Understand the Jenkins Shared Library Structure
+### Step 1: Understand the Jenkins Shared Library Structure
 
 A Jenkins Shared Library is hosted in a Git repository and follows a **specific directory structure**.
 
-### Standard Shared Library Layout
+#### Standard Shared Library Layout
 
 ```
 (root)
@@ -50,53 +40,42 @@ A Jenkins Shared Library is hosted in a Git repository and follows a **specific 
 ├── README.md
 ```
 
-### Purpose of Each Directory
+#### Purpose of Each Directory
 
 * **vars/**
-
   * Contains globally accessible pipeline steps
   * Each `.groovy` file becomes a callable function
 * **src/**
-
   * Contains helper classes and complex logic
   * Must follow standard Java package structure
 * **resources/**
-
   * Holds static files such as templates, JSON, YAML, scripts
 * **README.md**
-
   * Documents how the library is used
 
----
+### Step 2: Create the Shared Library Repository
 
-## Step 2: Create the Shared Library Repository
+1.  Create a new Git repository Example name:
 
-1. Create a new Git repository
-   Example name:
+    ```
+    jenkins-shared-library
+    ```
+2.  Clone the repository locally:
 
-   ```
-   jenkins-shared-library
-   ```
+    ```bash
+    git clone <repository-url>
+    cd jenkins-shared-library
+    ```
+3.  Create the directory structure:
 
-2. Clone the repository locally:
+    ```bash
+    mkdir -p vars src/org/example resources
+    touch README.md
+    ```
 
-   ```bash
-   git clone <repository-url>
-   cd jenkins-shared-library
-   ```
+### Step 3: Create a Custom Pipeline Step (vars directory)
 
-3. Create the directory structure:
-
-   ```bash
-   mkdir -p vars src/org/example resources
-   touch README.md
-   ```
-
----
-
-## Step 3: Create a Custom Pipeline Step (vars directory)
-
-### Create `vars/helloWorld.groovy`
+#### Create `vars/helloWorld.groovy`
 
 ```groovy
 def call(String name = 'World') {
@@ -104,17 +83,15 @@ def call(String name = 'World') {
 }
 ```
 
-### Explanation
+#### Explanation
 
 * The `call()` method makes this file callable as a pipeline step
 * You can invoke it directly as `helloWorld('Name')`
 * The function is available globally to all pipelines using this library
 
----
+### Step 4: Create a Helper Class (src directory)
 
-## Step 4: Create a Helper Class (src directory)
-
-### Create `src/org/example/MyHelperClass.groovy`
+#### Create `src/org/example/MyHelperClass.groovy`
 
 ```groovy
 package org.example
@@ -126,15 +103,13 @@ class MyHelperClass {
 }
 ```
 
-### Explanation
+#### Explanation
 
 * Classes under `src/` are imported and used inside `script {}` blocks
 * Logic here is reusable and testable
 * Use helper classes for complex operations
 
----
-
-## Step 5: Push the Shared Library to Git
+### Step 5: Push the Shared Library to Git
 
 ```bash
 git add .
@@ -145,52 +120,44 @@ git push origin main
 
 Your shared library is now available in Git.
 
----
-
-## Step 6: Configure the Shared Library in Jenkins
+### Step 6: Configure the Shared Library in Jenkins
 
 1. Open **Jenkins Dashboard**
-2. Navigate to:
+2.  Navigate to:
 
-   ```
-   Manage Jenkins → Configure System
-   ```
+    ```
+    Manage Jenkins → Configure System
+    ```
 3. Scroll to **Global Pipeline Libraries**
 4. Click **Add**
 
-### Configuration Values
+#### Configuration Values
 
-* **Name**
+*   **Name**
 
-  ```
-  shared-library
-  ```
+    ```
+    shared-library
+    ```
+*   **Default Version**
 
-* **Default Version**
+    ```
+    main
+    ```
+*   **Retrieval Method**
 
-  ```
-  main
-  ```
-
-* **Retrieval Method**
-
-  ```
-  Modern SCM
-  ```
-
+    ```
+    Modern SCM
+    ```
 * **SCM**
-
   * Select **Git**
   * Repository URL: `<your-shared-library-repo-url>`
   * Credentials: Select credentials if required
 
 5. Click **Save**
 
----
+### Step 7: Use the Shared Library in a Jenkins Pipeline
 
-## Step 7: Use the Shared Library in a Jenkins Pipeline
-
-### Example Jenkinsfile
+#### Example Jenkinsfile
 
 ```groovy
 @Library('shared-library') _
@@ -217,22 +184,20 @@ pipeline {
 }
 ```
 
-### Key Notes
+#### Key Notes
 
 * `@Library('shared-library') _` loads the library
 * Steps from `vars/` are callable directly
 * Classes from `src/` are accessed using their package name
 * Helper classes must be used inside `script {}` blocks
 
----
-
-## Step 8: Test the Shared Library
+### Step 8: Test the Shared Library
 
 1. Create or update a Jenkins Pipeline job
 2. Paste the Jenkinsfile or reference it from SCM
 3. Run the pipeline
 
-### Expected Output
+#### Expected Output
 
 ```
 Hello, Jenkins User!
@@ -245,9 +210,7 @@ This confirms:
 * Custom step executed correctly
 * Helper class imported and used properly
 
----
-
-## Best Practices
+### Best Practices
 
 * Keep business logic in `src/`, not in pipelines
 * Keep `vars/` steps simple and readable
@@ -255,9 +218,7 @@ This confirms:
 * Use one shared library across multiple teams
 * Document usage clearly in `README.md`
 
----
-
-## Lab Completion Criteria
+### Lab Completion Criteria
 
 You have successfully completed this lab if:
 

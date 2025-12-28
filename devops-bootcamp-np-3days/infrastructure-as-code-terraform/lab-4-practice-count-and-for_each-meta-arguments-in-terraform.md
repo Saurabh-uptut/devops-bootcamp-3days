@@ -1,6 +1,6 @@
-# Lab 4: Practice `count` and `for_each` Meta-Arguments in Terraform on AWS
+# Lab 4: Practice Count and For\_Each Meta-Arguments in Terraform
 
-## Overview
+### Overview
 
 In this lab, you will learn how to create multiple **Amazon EC2 instances** using a single Terraform resource block.
 
@@ -15,9 +15,9 @@ You will implement three scenarios:
 2. Create multiple EC2 instances using `count` with a list
 3. Create multiple EC2 instances using `for_each`
 
----
+***
 
-## Learning Objectives
+### Learning Objectives
 
 By the end of this lab, you will be able to:
 
@@ -26,9 +26,9 @@ By the end of this lab, you will be able to:
 3. Understand how `for_each` works and when to use it
 4. Compare `count` vs `for_each` for real infrastructure use cases
 
----
+***
 
-## Pre-Requisites
+### Pre-Requisites
 
 * AWS account with valid credentials
 * Terraform installed locally
@@ -42,30 +42,30 @@ Validate AWS access:
 aws sts get-caller-identity
 ```
 
----
+***
 
-## Notes (AWS specifics)
+### Notes (AWS specifics)
 
 * This lab uses the **default VPC** and its default subnets.
 * Instead of hardcoding an AMI ID, we fetch the **latest Ubuntu 24.04 LTS** AMI for the chosen region using a Terraform data source.
 * Instances will be launched in the first available default subnet.
 
----
+***
 
-# PART 1: Using `count` with a Fixed Number
+## PART 1: Using `count` with a Fixed Number
 
-## Task 1: Provision Multiple EC2 Instances Using Fixed `count`
+### Task 1: Provision Multiple EC2 Instances Using Fixed `count`
 
-### Step 1: Create Project Directory
+#### Step 1: Create Project Directory
 
 ```bash
 mkdir count_example_aws
 cd count_example_aws
 ```
 
----
+***
 
-### Step 2: Provider Configuration (`providers.tf`)
+#### Step 2: Provider Configuration (`providers.tf`)
 
 Create `providers.tf`:
 
@@ -86,9 +86,9 @@ provider "aws" {
 }
 ```
 
----
+***
 
-### Step 3: Define Variables (`variables.tf`)
+#### Step 3: Define Variables (`variables.tf`)
 
 Create `variables.tf`:
 
@@ -119,9 +119,9 @@ variable "tags" {
 }
 ```
 
----
+***
 
-### Step 4: Create EC2 Instances (`ec2_instance.tf`)
+#### Step 4: Create EC2 Instances (`ec2_instance.tf`)
 
 Create `ec2_instance.tf`:
 
@@ -179,14 +179,13 @@ Explanation:
 
 * `count = 3` creates three EC2 instances
 * `count.index` generates unique names like:
-
   * compute-saurabh-0
   * compute-saurabh-1
   * compute-saurabh-2
 
----
+***
 
-### Step 5: Provide Values (`terraform.tfvars`)
+#### Step 5: Provide Values (`terraform.tfvars`)
 
 Create `terraform.tfvars`:
 
@@ -201,9 +200,9 @@ tags = {
 }
 ```
 
----
+***
 
-### Step 6: Terraform Workflow
+#### Step 6: Terraform Workflow
 
 Run:
 
@@ -220,36 +219,36 @@ Verify in AWS Console:
 * EC2 -> Instances
 * Confirm 3 instances exist with your naming pattern
 
----
+***
 
-### Step 7: Destroy Resources
+#### Step 7: Destroy Resources
 
 ```bash
 terraform destroy --auto-approve
 ```
 
----
+***
 
-# PART 2: Using `count` with a List
+## PART 2: Using `count` with a List
 
-## Task 2: Provision Multiple EC2 Instances by Iterating Over a List
+### Task 2: Provision Multiple EC2 Instances by Iterating Over a List
 
-### Step 1: Create Project Directory
+#### Step 1: Create Project Directory
 
 ```bash
 mkdir count_example_2_aws
 cd count_example_2_aws
 ```
 
----
+***
 
-### Step 2: Provider Configuration (`providers.tf`)
+#### Step 2: Provider Configuration (`providers.tf`)
 
 Use the same `providers.tf` as Part 1.
 
----
+***
 
-### Step 3: Define Variables (`variables.tf`)
+#### Step 3: Define Variables (`variables.tf`)
 
 Create `variables.tf`:
 
@@ -280,9 +279,9 @@ variable "tags" {
 }
 ```
 
----
+***
 
-### Step 4: EC2 Instance Definition (`ec2_instance.tf`)
+#### Step 4: EC2 Instance Definition (`ec2_instance.tf`)
 
 Create `ec2_instance.tf`:
 
@@ -336,9 +335,9 @@ resource "aws_instance" "compute" {
 }
 ```
 
----
+***
 
-### Step 5: Variable Values (`terraform.tfvars`)
+#### Step 5: Variable Values (`terraform.tfvars`)
 
 Create `terraform.tfvars`:
 
@@ -354,9 +353,9 @@ tags = {
 }
 ```
 
----
+***
 
-### Step 6: Terraform Workflow
+#### Step 6: Terraform Workflow
 
 ```bash
 terraform init
@@ -366,36 +365,36 @@ terraform plan
 terraform apply --auto-approve
 ```
 
----
+***
 
-### Step 7: Destroy Resources
+#### Step 7: Destroy Resources
 
 ```bash
 terraform destroy --auto-approve
 ```
 
----
+***
 
-# PART 3: Using `for_each`
+## PART 3: Using `for_each`
 
-## Task 3: Provision Multiple EC2 Instances Using `for_each`
+### Task 3: Provision Multiple EC2 Instances Using `for_each`
 
-### Step 1: Create Project Directory
+#### Step 1: Create Project Directory
 
 ```bash
 mkdir for_each_example_aws
 cd for_each_example_aws
 ```
 
----
+***
 
-### Step 2: Provider Configuration (`providers.tf`)
+#### Step 2: Provider Configuration (`providers.tf`)
 
 Use the same `providers.tf` as Part 1.
 
----
+***
 
-### Step 3: Define Variables (`variables.tf`)
+#### Step 3: Define Variables (`variables.tf`)
 
 Create `variables.tf`:
 
@@ -426,9 +425,9 @@ variable "tags" {
 }
 ```
 
----
+***
 
-### Step 4: EC2 Instance Definition (`ec2_instance.tf`)
+#### Step 4: EC2 Instance Definition (`ec2_instance.tf`)
 
 Create `ec2_instance.tf`:
 
@@ -487,9 +486,9 @@ Explanation:
 * `for_each` creates one EC2 instance per value in the set
 * Each instance is tracked by key, which makes identities more stable than index-based tracking
 
----
+***
 
-### Step 5: Variable Values (`terraform.tfvars`)
+#### Step 5: Variable Values (`terraform.tfvars`)
 
 Create `terraform.tfvars`:
 
@@ -505,9 +504,9 @@ tags = {
 }
 ```
 
----
+***
 
-### Step 6: Terraform Workflow
+#### Step 6: Terraform Workflow
 
 ```bash
 terraform init
@@ -517,17 +516,17 @@ terraform plan
 terraform apply --auto-approve
 ```
 
----
+***
 
-### Step 7: Destroy Resources
+#### Step 7: Destroy Resources
 
 ```bash
 terraform destroy --auto-approve
 ```
 
----
+***
 
-## Key Takeaways
+### Key Takeaways
 
 * Use `count` when resources are identical and a simple quantity is enough
 * Be careful using `count` with lists because changing list order can recreate instances

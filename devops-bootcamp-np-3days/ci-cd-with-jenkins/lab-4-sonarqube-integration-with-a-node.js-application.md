@@ -1,8 +1,6 @@
-# Lab 4: SonarQube Integration with a Node.js Application using Jenkins
+# Lab 4: SonarQube Integration with a Node.js Application
 
 In this lab, you will create a Jenkins Pipeline that builds, tests, and scans a Node.js application using SonarQube. You will also publish JUnit test results, coverage artifacts, and a deployment ready ZIP package from Jenkins.
-
----
 
 ## Pre-Requisites
 
@@ -10,13 +8,11 @@ In this lab, you will create a Jenkins Pipeline that builds, tests, and scans a 
 * SonarQube set up and running (from the previous lab)
 * Jenkins installed and running
 * Jenkins agent (Linux recommended) with:
-
   * Git
   * Node.js 18
   * npm
   * zip
 * Jenkins plugins:
-
   * Pipeline
   * Git
   * JUnit
@@ -25,8 +21,6 @@ In this lab, you will create a Jenkins Pipeline that builds, tests, and scans a 
   * NodeJS (optional, if you want Jenkins managed Node installs)
   * HTML Publisher (optional, for coverage HTML report)
 
----
-
 ## Learning Objectives
 
 1. Create a Jenkins Pipeline for a Node.js CI process
@@ -34,8 +28,6 @@ In this lab, you will create a Jenkins Pipeline that builds, tests, and scans a 
 3. Publish test results and deployment artifacts in Jenkins
 4. Store SonarQube credentials securely using Jenkins credentials
 5. Understand how CI, testing, packaging, and code analysis work together
-
----
 
 ## Step 1: Prepare the Node.js Application
 
@@ -49,8 +41,6 @@ cd <repository-folder>
 
 3. Create a `Jenkinsfile` in the repo root.
 
----
-
 ## Step 2: Configure SonarQube in Jenkins
 
 ### Step 2.1: Add SonarQube Server in Jenkins
@@ -59,13 +49,10 @@ cd <repository-folder>
 2. Find **SonarQube servers**
 3. Click **Add SonarQube**
 4. Provide:
-
    * Name: `sonarqube-dev`
    * Server URL: your SonarQube URL (example: `http://sonarqube:9000`)
    * Server authentication token:
-
      * Add a Jenkins credential:
-
        * Kind: Secret text
        * ID: `sonar-token-dev`
        * Value: your SonarQube token
@@ -77,13 +64,10 @@ Save.
 1. Manage Jenkins -> Tools
 2. Find **SonarQube Scanner**
 3. Add installation:
-
    * Name: `sonar-scanner`
    * Enable auto install if available, or configure a scanner path on agent
 
 Save.
-
----
 
 ## Step 3: Add the Jenkinsfile (CI + Tests + Sonar + Artifacts)
 
@@ -270,8 +254,6 @@ What this Jenkinsfile expects:
 
 If your repo uses different test commands or report paths, update the Jenkinsfile accordingly.
 
----
-
 ## Step 4: Create a Jenkins Pipeline Job
 
 1. Jenkins -> New Item
@@ -282,7 +264,6 @@ If your repo uses different test commands or report paths, update the Jenkinsfil
 ### Configure the job
 
 * Under Pipeline:
-
   * Definition: Pipeline script from SCM
   * SCM: Git
   * Repository URL: your fork
@@ -291,20 +272,15 @@ If your repo uses different test commands or report paths, update the Jenkinsfil
 
 Save.
 
----
-
 ## Step 5: Run the Pipeline
 
 1. Open the job
 2. Click Build Now
 3. Inspect:
-
    * Console Output
    * Test Result Trend
    * Coverage Report (if HTML published)
    * Artifacts section for ZIP download
-
----
 
 ## Step 6: Review the SonarQube Report
 
@@ -312,15 +288,12 @@ Save.
 2. Go to Projects
 3. Open: `sample-node-app-saurabh`
 4. Review:
-
    * Bugs
    * Vulnerabilities
    * Code smells
    * Security hotspots
    * Coverage
    * Duplications
-
----
 
 ## Step 7: Download and Run the Deployment Artifact
 
@@ -334,8 +307,6 @@ npm start
 ```
 
 Open the app in your browser using your machine or VM IP.
-
----
 
 ## Completion
 

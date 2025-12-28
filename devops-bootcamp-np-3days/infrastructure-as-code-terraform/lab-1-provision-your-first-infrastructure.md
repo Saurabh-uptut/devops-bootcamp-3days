@@ -1,4 +1,4 @@
-# Lab: Provision Your First AWS EC2 Instance with Terraform
+# Lab 1: Provision Your First Infrastructure
 
 ## Goal
 
@@ -10,8 +10,6 @@ Provision a single **Amazon EC2 virtual machine** on AWS using **Terraform**, us
 * Tagged with `Name = myWebServer`
 * AMI and instance type controlled through Terraform variables
 
----
-
 ## Learning Objectives
 
 By the end of this lab, you will be able to:
@@ -22,7 +20,7 @@ By the end of this lab, you will be able to:
 * Run the standard Terraform workflow: `fmt`, `validate`, `plan`, `apply`
 * Verify the deployed EC2 instance in the AWS Console
 
----
+***
 
 ## Prerequisites
 
@@ -54,8 +52,6 @@ To confirm credentials are working:
 aws sts get-caller-identity
 ```
 
----
-
 ## Lab Structure
 
 You will create a Terraform root module folder:
@@ -68,8 +64,6 @@ myFirstVm/
   terraform.tfvars
 ```
 
----
-
 ## Step 1: Create the project folder
 
 1. Open VS Code
@@ -80,8 +74,6 @@ myFirstVm
 ```
 
 3. Open the folder in VS Code
-
----
 
 ## Step 2: Add provider configuration
 
@@ -105,10 +97,8 @@ provider "aws" {
 ### Description
 
 * **terraform block**: Declares required providers and pins the provider version.
-* **required_providers**: Ensures Terraform downloads the correct AWS provider plugin.
+* **required\_providers**: Ensures Terraform downloads the correct AWS provider plugin.
 * **provider "aws"**: Sets the AWS region where resources will be created.
-
----
 
 ## Step 3: Initialize Terraform
 
@@ -124,8 +114,6 @@ Terraform downloads the AWS provider and creates:
 
 * `.terraform/` directory (provider plugins and internal files)
 * `.terraform.lock.hcl` (locks provider versions for consistent installs)
-
----
 
 ## Step 4: Define variables
 
@@ -148,8 +136,6 @@ variable "instance_type" {
 
 * `ami_image_name` has a default value for convenience.
 * `instance_type` is required and will be provided via `terraform.tfvars`.
-
----
 
 ## Step 5: Create the EC2 instance resource
 
@@ -174,8 +160,6 @@ This resource tells Terraform to create:
 * An instance size from `var.instance_type`
 * A tag to identify the VM in the AWS console
 
----
-
 ## Step 6: Provide variable values using terraform.tfvars
 
 Create a file named `terraform.tfvars` and add:
@@ -190,8 +174,6 @@ instance_type  = "t2.micro"
 * AMI IDs vary by region. If you change `region`, you must update the AMI.
 * `terraform.tfvars` automatically supplies variable values during `plan` and `apply`.
 
----
-
 ## Step 7: Format the Terraform code
 
 Run:
@@ -201,8 +183,6 @@ terraform fmt
 ```
 
 This formats all `.tf` files to standard Terraform style.
-
----
 
 ## Step 8: Validate the configuration
 
@@ -217,8 +197,6 @@ This checks for:
 * syntax errors
 * invalid references
 * basic internal consistency
-
----
 
 ## Step 9: Preview what Terraform will create
 
@@ -235,8 +213,6 @@ Terraform will show:
 * one EC2 instance being created
 * the AMI, instance type, and tags
 
----
-
 ## Step 10: Deploy the infrastructure
 
 Run:
@@ -249,8 +225,6 @@ terraform apply --auto-approve
 
 Terraform will create the EC2 instance and display a completion message.
 
----
-
 ## Step 11: Verify in AWS Console
 
 1. Open AWS Console
@@ -260,7 +234,7 @@ Terraform will create the EC2 instance and display a completion message.
 
 `myWebServer`
 
----
+***
 
 ## Troubleshooting Tips
 
@@ -276,8 +250,6 @@ If you see an error like “InvalidAMIID.NotFound”:
 * Re-run `aws configure`
 * Confirm `aws sts get-caller-identity` works
 * Ensure IAM permissions include EC2 create permissions
-
----
 
 ## Cleanup
 

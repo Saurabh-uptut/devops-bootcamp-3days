@@ -1,31 +1,29 @@
-# Lab 8: Provision AWS Infrastructure using Reusable Terraform Modules
+# Lab 7: Provision AWS Infrastructure using Reusable Terraform Modules
 
-## Goal architecture
+### Goal architecture
 
 * 1 VPC
 * 2 subnets: `public-subnet`, `private-subnet`
 * Routeing
-
   * Public subnet routes `0.0.0.0/0` to an Internet Gateway
   * Private subnet has no internet route (no NAT in this lab)
 * 1 Security Group: allow **tcp 22** and **tcp 80** (implemented using `dynamic` ingress rules)
 * 2 EC2 instances: one per subnet
-
   * Public VM has a public IP
   * Private VM has no public IP
 
----
+***
 
-## Learning outcomes
+### Learning outcomes
 
 * Build reusable Terraform modules for AWS VPC, subnets, security group, and EC2
 * Use `for_each` at the module level to create multiple subnets and VMs
 * Use `dynamic` blocks to make modules flexible (ingress rules, optional public IP)
 * Consume module outputs cleanly as maps keyed by resource name
 
----
+***
 
-## Folder structure and module layout
+### Folder structure and module layout
 
 Create this structure:
 
@@ -39,11 +37,11 @@ mkdir -p AWS/aws_vpc \
 
 Inside each module folder you will create `variables.tf`, a main `.tf` file, and `outputs.tf`.
 
----
+***
 
-# MODULE 1: VPC (`AWS/aws_vpc`)
+## MODULE 1: VPC (`AWS/aws_vpc`)
 
-## `variables.tf`
+### `variables.tf`
 
 ```hcl
 variable "name" { type = string }
@@ -66,7 +64,7 @@ variable "enable_dns_support" {
 }
 ```
 
-## `vpc.tf`
+### `vpc.tf`
 
 ```hcl
 resource "aws_vpc" "this" {
@@ -88,7 +86,7 @@ resource "aws_internet_gateway" "this" {
 }
 ```
 
-## `outputs.tf`
+### `outputs.tf`
 
 ```hcl
 output "vpc_id" {
@@ -104,11 +102,11 @@ output "igw_id" {
 }
 ```
 
----
+***
 
-# MODULE 2: Subnet (`AWS/aws_subnet`)
+## MODULE 2: Subnet (`AWS/aws_subnet`)
 
-## `variables.tf`
+### `variables.tf`
 
 ```hcl
 variable "name" { type = string }
@@ -125,7 +123,7 @@ variable "public" {
 }
 ```
 
-## `subnet.tf`
+### `subnet.tf`
 
 ```hcl
 resource "aws_subnet" "this" {
@@ -141,7 +139,7 @@ resource "aws_subnet" "this" {
 }
 ```
 
-## `outputs.tf`
+### `outputs.tf`
 
 ```hcl
 output "subnet_id" {
@@ -153,11 +151,11 @@ output "cidr_block" {
 }
 ```
 
----
+***
 
-# MODULE 3: Security Group (`AWS/aws_security_group`) using `dynamic` ingress rules
+## MODULE 3: Security Group (`AWS/aws_security_group`) using `dynamic` ingress rules
 
-## `variables.tf`
+### `variables.tf`
 
 ```hcl
 variable "name" { type = string }
@@ -175,7 +173,7 @@ variable "ingress" {
 }
 ```
 
-## `security_group.tf`
+### `security_group.tf`
 
 ```hcl
 resource "aws_security_group" "this" {
@@ -208,7 +206,7 @@ resource "aws_security_group" "this" {
 }
 ```
 
-## `outputs.tf`
+### `outputs.tf`
 
 ```hcl
 output "security_group_id" {
@@ -216,11 +214,11 @@ output "security_group_id" {
 }
 ```
 
----
+***
 
-# MODULE 4: EC2 Instance (`AWS/aws_ec2_instance`) with optional public IP
+## MODULE 4: EC2 Instance (`AWS/aws_ec2_instance`) with optional public IP
 
-## `variables.tf`
+### `variables.tf`
 
 ```hcl
 variable "name" { type = string }
@@ -246,7 +244,7 @@ variable "tags" {
 }
 ```
 
-## `ec2_instance.tf`
+### `ec2_instance.tf`
 
 ```hcl
 data "aws_ami" "ubuntu_2404" {
@@ -281,7 +279,7 @@ resource "aws_instance" "this" {
 }
 ```
 
-## `outputs.tf`
+### `outputs.tf`
 
 ```hcl
 output "instance_id" {
@@ -297,11 +295,11 @@ output "public_ip" {
 }
 ```
 
----
+***
 
-# INFRA PROJECT (`infra/`)
+## INFRA PROJECT (`infra/`)
 
-## Step 1: Create `providers.tf`
+### Step 1: Create `providers.tf`
 
 Create `infra/providers.tf`:
 
@@ -328,9 +326,9 @@ provider "aws" {
 
 If you want to use remote state (optional), add an S3 backend here after creating the bucket and DynamoDB table.
 
----
+***
 
-## Step 2: Create `variables.tf`
+### Step 2: Create `variables.tf`
 
 Create `infra/variables.tf`:
 
@@ -342,9 +340,9 @@ variable "region" {
 }
 ```
 
----
+***
 
-## Step 3: Create SSH key (TLS) + AWS Key Pair
+### Step 3: Create SSH key (TLS) + AWS Key Pair
 
 Create `infra/ssh_key.tf`:
 
@@ -367,9 +365,9 @@ output "private_key_pem" {
 
 You will use `aws_key_pair.lab_key.key_name` for both VMs.
 
----
+***
 
-## Step 4: Create `locals.tf` (subnets + VMs)
+### Step 4: Create `locals.tf` (subnets + VMs)
 
 Create `infra/locals.tf`:
 
@@ -427,9 +425,9 @@ locals {
 }
 ```
 
----
+***
 
-## Step 5: Create `main.tf` (wire modules together)
+### Step 5: Create `main.tf` (wire modules together)
 
 Create `infra/main.tf`:
 
@@ -474,9 +472,9 @@ module "ec2" {
 }
 ```
 
----
+***
 
-## Step 6: Create `routes.tf` (public vs private routing)
+### Step 6: Create `routes.tf` (public vs private routing)
 
 Create `infra/routes.tf`:
 
@@ -510,9 +508,9 @@ resource "aws_route_table_association" "subnet_assoc" {
 }
 ```
 
----
+***
 
-## Step 7: Create `outputs.tf`
+### Step 7: Create `outputs.tf`
 
 Create `infra/outputs.tf`:
 
@@ -532,9 +530,9 @@ output "private_ips" {
 }
 ```
 
----
+***
 
-# Run Terraform workflow
+## Run Terraform workflow
 
 From inside `infra/`:
 
@@ -546,9 +544,9 @@ terraform plan
 terraform apply --auto-approve
 ```
 
----
+***
 
-## What students should observe
+### What students should observe
 
 * Modules are reusable across projects
 * `for_each` at the module level creates multiple subnets and VMs cleanly
@@ -556,9 +554,9 @@ terraform apply --auto-approve
 * Outputs are easy to consume as maps keyed by VM name
 * Public VM gets a public IP, private VM does not
 
----
+***
 
-## Cleanup
+### Cleanup
 
 From `infra/`:
 
