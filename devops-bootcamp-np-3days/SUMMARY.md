@@ -1,6 +1,7 @@
 # Table of contents
 
-* [Infrastructure as Code - Terraform](README.md)
+* [Lab: Environment Setup for AWS Infrastructure Automation](README.md)
+* [Infrastructure as Code - Terraform](<README (1).md>)
   * [Terraform Slides](infrastructure-as-code-terraform/slides.md)
   * [Lab 1: Provision Your First Infrastructure](infrastructure-as-code-terraform/lab-1-provision-your-first-infrastructure.md)
   * [Lab 2: Provision AWS VPC](infrastructure-as-code-terraform/lab-2-provision-aws-vpc.md)
