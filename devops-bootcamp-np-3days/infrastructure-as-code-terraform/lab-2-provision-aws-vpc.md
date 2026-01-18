@@ -83,6 +83,7 @@ vpc/
   nacl.tf
   ec2_instance.tf
   outputs.tf
+  ssh-key.tf
 ```
 
 ***
@@ -137,13 +138,13 @@ variable "cidr_block" {
 variable "public_subnet_cidr_block" {
   type        = string
   description = "CIDR for public subnet"
-  default     = "10.1.0.0/24"
+  default     = "10.0.1.0/24"
 }
 
 variable "private_subnet_cidr_block" {
   type        = string
   description = "CIDR for private subnet"
-  default     = "10.2.0.0/24"
+  default     = "10.0.1.0/24"
 }
 
 variable "availability_zone" {
@@ -189,8 +190,8 @@ availability_zone = {
 
 cidr_block                = "10.0.0.0/16"
 vpc_name                  = "myVpc-saurabh"
-public_subnet_cidr_block  = "10.1.0.0/24"
-private_subnet_cidr_block = "10.2.0.0/24"
+public_subnet_cidr_block  = "10.0.1.0/24"
+private_subnet_cidr_block = "10.0.2.0/24"
 
 instance_type    = "t2.micro"
 key_name         = "myKey"
@@ -310,8 +311,7 @@ Key correction: For “private allows SSH only from public machines”, the safe
 
 **security\_group.tf**
 
-```hcl
-resource "aws_security_group" "public_security_group" {
+<pre class="language-hcl"><code class="lang-hcl">resource "aws_security_group" "public_security_group" {
   name        = "allow_public_traffic"
   description = "Allow HTTP and SSH to public instance"
   vpc_id      = aws_vpc.myVpc.id
@@ -345,8 +345,8 @@ resource "aws_security_group" "public_security_group" {
   }
 }
 
-resource "aws_security_group" "private_security_group" {
-  name        = "allow_private_traffic"
+<strong>resource "aws_security_group" "private_security_group" {
+</strong>  name        = "allow_private_traffic"
   description = "Allow SSH only from public security group"
   vpc_id      = aws_vpc.myVpc.id
 
@@ -370,7 +370,7 @@ resource "aws_security_group" "private_security_group" {
     Name = "allow_private_traffic"
   }
 }
-```
+</code></pre>
 
 ***
 
@@ -475,6 +475,24 @@ resource "aws_network_acl_rule" "out_all" {
 
 ## Step 10: Create EC2 instances (with latest Ubuntu AMI via data source)
 
+First, let's create an ssh-key pair:
+
+```
+resource "tls_private_key" "ssh-key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "ssh_key" {
+  key_name   = var.key_name
+  public_key = tls_private_key.ssh-key.public_key_openssh
+}
+```
+
+This key-pair, we will use in both the ec2 machine. Since a new provider is added you need to run terraform init command again, if you have already executed it.
+
+Next, let us add an ec2 instance:
+
 Instead of hardcoding AMI IDs (which change), use a data source to fetch the latest Ubuntu 24.04 LTS for the region.
 
 **ec2\_instance.tf**
@@ -498,7 +516,7 @@ data "aws_ami" "ubuntu_2404" {
 resource "aws_instance" "public_ec2" {
   ami                         = data.aws_ami.ubuntu_2404.id
   instance_type               = var.instance_type
-  key_name                    = var.key_name
+  key_name = aws_key_pair.ssh_key.key_name
   availability_zone           = var.availability_zone["public_subnet_az"]
   subnet_id                   = aws_subnet.public_subnet.id
   vpc_security_group_ids      = [aws_security_group.public_security_group.id]
@@ -521,7 +539,7 @@ resource "aws_instance" "public_ec2" {
 resource "aws_instance" "private_ec2" {
   ami                    = data.aws_ami.ubuntu_2404.id
   instance_type          = var.instance_type
-  key_name               = var.key_name
+  key_name = aws_key_pair.ssh_key.key_name
   availability_zone      = var.availability_zone["private_subnet_az"]
   subnet_id              = aws_subnet.private_subnet.id
   vpc_security_group_ids = [aws_security_group.private_security_group.id]
@@ -557,9 +575,28 @@ output "private_ip_address" {
   description = "Private IP of the private EC2 instance"
   value       = aws_instance.private_ec2.private_ip
 }
+
+output "private_key" {
+
+    description = "The key name used for the EC2 instances"
+    value       = tls_private_key.ssh-key.private_key_openssh
+
+    sensitive = true
+  
+}
 ```
 
-***
+The private\_key output variable is the private key used to connect to the machine via ssh.
+
+Run the following command to save the private ssh key in a file.
+
+```
+terraform output private_key >> myKey.pem
+```
+
+```
+chmod 400 myKey.pem
+```
 
 ## Step 12: Execute the Terraform workflow
 

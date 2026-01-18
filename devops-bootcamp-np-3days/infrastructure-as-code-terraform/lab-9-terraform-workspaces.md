@@ -1,18 +1,22 @@
-# Lab 9: Terraform Workspaces on AWS
+---
+hidden: true
+---
+
+# Lab 9: Terraform Workspaces
 
 In this lab, you will practice Terraform workspaces to keep separate state files (and therefore separate environments) inside the same codebase, using AWS as the target cloud.
 
----
+***
 
-## Learning Objectives
+### Learning Objectives
 
 * Create, list, select, and delete Terraform workspaces
 * Manage multiple non-overlapping environments from the same Terraform configuration
 * Maintain multiple `terraform.tfstate` files using workspaces
 
----
+***
 
-## Prerequisites
+### Prerequisites
 
 * Terraform installed
 * AWS CLI installed and configured (`aws configure`)
@@ -25,14 +29,13 @@ Validate AWS access:
 aws sts get-caller-identity
 ```
 
----
+***
 
-## Lab Setup (Example AWS Project)
+### Lab Setup (Example AWS Project)
 
-If you already have an AWS Terraform project, you can use it directly.
-If not, use this minimal EC2 example.
+If you already have an AWS Terraform project, you can use it directly. If not, use this minimal EC2 example.
 
-### Create project folder
+#### Create project folder
 
 ```bash
 mkdir terraform-workspaces-aws
@@ -45,7 +48,7 @@ Create the following files:
 * `variables.tf`
 * `main.tf`
 
-### `providers.tf`
+#### `providers.tf`
 
 ```hcl
 terraform {
@@ -64,7 +67,7 @@ provider "aws" {
 }
 ```
 
-### `variables.tf`
+#### `variables.tf`
 
 ```hcl
 variable "region" {
@@ -85,7 +88,7 @@ variable "instance_type" {
 }
 ```
 
-### `main.tf`
+#### `main.tf`
 
 ```hcl
 data "aws_vpc" "default" {
@@ -133,9 +136,9 @@ resource "aws_instance" "example" {
 }
 ```
 
----
+***
 
-# Step 0: Prepare the project
+## Step 0: Prepare the project
 
 Format and initialize:
 
@@ -144,11 +147,11 @@ terraform fmt
 terraform init
 ```
 
----
+***
 
-# Part 1: Default Workspace
+## Part 1: Default Workspace
 
-## 1) List workspaces
+### 1) List workspaces
 
 ```bash
 terraform workspace list
@@ -158,7 +161,7 @@ You should see:
 
 * `default` (current)
 
-## 2) Plan and apply in default workspace
+### 2) Plan and apply in default workspace
 
 Create a simple `terraform.tfvars` for default.
 
@@ -183,17 +186,17 @@ Result:
 * A local state file is created: `terraform.tfstate`
 * This is the state for the default workspace
 
----
+***
 
-# Part 2: Create and Use a “development” Workspace
+## Part 2: Create and Use a “development” Workspace
 
-## 3) Create a new workspace
+### 3) Create a new workspace
 
 ```bash
 terraform workspace new development
 ```
 
-## 4) Confirm current workspace
+### 4) Confirm current workspace
 
 ```bash
 terraform workspace list
@@ -205,11 +208,11 @@ You will notice:
 * A folder appears: `terraform.tfstate.d/development/`
 * This is where the `development` workspace state lives
 
----
+***
 
-# Part 3: Use a Separate tfvars file per workspace
+## Part 3: Use a Separate tfvars file per workspace
 
-## 5) Create `dev.terraform.tfvars`
+### 5) Create `dev.terraform.tfvars`
 
 Create `dev.terraform.tfvars`:
 
@@ -219,7 +222,7 @@ instance_name = "ec2-saurabh-dev"
 instance_type = "t3.micro"
 ```
 
-## 6) Plan/apply in development using var-file
+### 6) Plan/apply in development using var-file
 
 ```bash
 terraform plan -var-file=dev.terraform.tfvars
@@ -229,18 +232,16 @@ terraform apply -var-file=dev.terraform.tfvars --auto-approve
 Result:
 
 * A separate state file is created under:
-
   * `terraform.tfstate.d/development/terraform.tfstate`
 * Now you have two environments managed from the same code:
-
   * default workspace
   * development workspace
 
----
+***
 
-# Part 4: Destroy Resources Cleanly (Workspace by Workspace)
+## Part 4: Destroy Resources Cleanly (Workspace by Workspace)
 
-## 7) Destroy development resources
+### 7) Destroy development resources
 
 Make sure you are in development:
 
@@ -254,18 +255,18 @@ Destroy using the same var-file:
 terraform destroy -var-file=dev.terraform.tfvars --auto-approve
 ```
 
-## 8) Switch to default and destroy default resources
+### 8) Switch to default and destroy default resources
 
 ```bash
 terraform workspace select default
 terraform destroy --auto-approve
 ```
 
----
+***
 
-# Part 5: Delete the workspace
+## Part 5: Delete the workspace
 
-## 9) Delete development workspace
+### 9) Delete development workspace
 
 You must be in default before deleting development:
 

@@ -91,6 +91,7 @@ terraform {
 
 provider "aws" {
   # Configuration options
+  region = "us-east-1"
 }
 ```
 
@@ -123,7 +124,7 @@ Create a file named `variables.tf` and add:
 variable "ami_image_name" {
   type        = string
   description = "AMI ID used to create the EC2 instance"
-  default     = "ami-07d9b9ddc6cd8dd30"
+  default     = "ami-0ecb62995f68bb549"
 }
 
 variable "instance_type" {
@@ -165,7 +166,7 @@ This resource tells Terraform to create:
 Create a file named `terraform.tfvars` and add:
 
 ```hcl
-ami_image_name = "ami-07d9b9ddc6cd8dd30"
+ami_image_name = "ami-0ecb62995f68bb549"
 instance_type  = "t2.micro"
 ```
 

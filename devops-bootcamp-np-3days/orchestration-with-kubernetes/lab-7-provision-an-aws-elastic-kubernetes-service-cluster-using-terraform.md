@@ -1,10 +1,6 @@
-# Lab 7: Provision an AWS Elastic Kubernetes Service Cluster using Terraform
-
-## Overview
+# Lab 0: Provision an AWS Elastic Kubernetes Service Cluster Using Terraform
 
 In this lab, you will use Terraform to provision an **Amazon EKS** cluster and a **managed node group**. You will then fetch cluster credentials and verify access using `kubectl`.
-
----
 
 ## Learning objectives
 
@@ -13,8 +9,6 @@ In this lab, you will use Terraform to provision an **Amazon EKS** cluster and a
 3. Create a managed node group for worker nodes
 4. Fetch kubeconfig and validate cluster access
 5. Destroy the infrastructure using Terraform
-
----
 
 ## Prerequisites
 
@@ -31,8 +25,6 @@ Validate AWS access:
 aws sts get-caller-identity
 ```
 
----
-
 ## Step 0: Confirm required AWS tooling
 
 Check these commands work:
@@ -42,8 +34,6 @@ aws --version
 kubectl version --client=true
 terraform -version
 ```
-
----
 
 ## Step 1: Create a new Terraform project folder
 
@@ -61,8 +51,6 @@ Create these files:
 * iam.tf
 * eks.tf
 * outputs.tf
-
----
 
 ## Step 2: Configure provider in `providers.tf`
 
@@ -84,8 +72,6 @@ provider "aws" {
   region = var.region
 }
 ```
-
----
 
 ## Step 3: Define variables in `variables.tf`
 
@@ -141,8 +127,6 @@ variable "node_max_size" {
 }
 ```
 
----
-
 ## Step 4: Provide values in `terraform.tfvars`
 
 Create `terraform.tfvars`:
@@ -160,8 +144,6 @@ node_desired_size  = 2
 node_min_size      = 1
 node_max_size      = 3
 ```
-
----
 
 ## Step 5: Create VPC and public subnets in `network.tf`
 
@@ -235,7 +217,7 @@ Notes:
 * EKS requires subnets in at least two AZs for high availability.
 * This lab uses public subnets for simplicity.
 
----
+***
 
 ## Step 6: Create IAM roles for EKS in `iam.tf`
 
@@ -289,8 +271,6 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly" {
 }
 ```
 
----
-
 ## Step 7: Create EKS cluster and node group in `eks.tf`
 
 Create `eks.tf`:
@@ -333,8 +313,6 @@ resource "aws_eks_node_group" "primary" {
 }
 ```
 
----
-
 ## Step 8: Add outputs in `outputs.tf`
 
 Create `outputs.tf`:
@@ -356,8 +334,6 @@ output "cluster_endpoint" {
 }
 ```
 
----
-
 ## Step 9: Run the Terraform workflow
 
 ```bash
@@ -367,8 +343,6 @@ terraform validate
 terraform plan
 terraform apply --auto-approve
 ```
-
----
 
 ## Step 10: Fetch kubeconfig and connect to the cluster
 
@@ -387,8 +361,6 @@ kubectl get namespaces
 
 If nodes are in Ready state, the cluster is working.
 
----
-
 ## Step 11: Optional verification by deploying a test app
 
 Deploy:
@@ -404,15 +376,11 @@ Clean up the test deployment:
 kubectl delete deployment nginx
 ```
 
----
-
 ## Step 12: Destroy the infrastructure
 
 ```bash
 terraform destroy --auto-approve
 ```
-
----
 
 ## Common troubleshooting
 

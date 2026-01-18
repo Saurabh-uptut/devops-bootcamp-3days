@@ -7,9 +7,9 @@
 
 ### Prerequisite
 
-Complete a basic Terraform lab where you have deployed at least one EC2 instance on AWS (AWS CLI configured, Terraform working, IAM permissions ready).
+This lab is continuation of [Lab 2: Provision AWS VPC](lab-2-provision-aws-vpc.md) and we will use the same code repository.
 
-***
+Make sure to complete lab 2 before continuing here&#x20;
 
 ### Target architecture
 
@@ -20,76 +20,13 @@ Complete a basic Terraform lab where you have deployed at least one EC2 instance
 * Public subnet(s) route to Internet Gateway
 * Private subnet(s) do not have a default route to the internet
 
-***
-
-### Folder structure
-
-```
-.
-├── provider.tf
-├── variables.tf
-├── terraform.tfvars
-├── network.tf
-├── subnet.tf
-├── routes.tf
-├── security_group.tf
-├── ec2_instance.tf
-├── outputs.tf
-└── locals.tf
-```
-
-***
-
-## Task 0: Project setup
-
-### Step 1: Create project directory
-
-```bash
-mkdir lab5_reusable_aws
-cd lab5_reusable_aws
-```
-
-***
-
 ## Task 1: Create multiple subnets using `for_each`
 
-### 1) provider.tf
+### 1) In the variables.tf, add a subnet variable
 
-Create `provider.tf`:
-
-```hcl
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 6.0.0, < 7.0.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.region
-}
-```
-
-### 2) variables.tf (add subnet variable)
-
-Add to `variables.tf`:
+Add a new variable called subnets in `variables.tf`:
 
 ```hcl
-variable "region" {
-  type        = string
-  description = "AWS region"
-  default     = "us-east-1"
-}
-
-variable "vpc_cidr" {
-  type        = string
-  description = "CIDR for the VPC"
-  default     = "10.0.0.0/16"
-}
 
 variable "subnets" {
   type = map(object({
@@ -101,62 +38,36 @@ variable "subnets" {
 }
 ```
 
-### 3) terraform.tfvars (subnets)
+### 2) update terraform.tfvars with the subnets value as follow:
 
-Create `terraform.tfvars`:
+Update `terraform.tfvars` with the following subnets
 
 ```hcl
-region   = "us-east-1"
-vpc_cidr = "10.0.0.0/16"
 
 subnets = {
   public-subnet = {
-    cidr_block = "10.2.0.0/24"
+    cidr_block = "10.0.2.0/24"
     az         = "us-east-1a"
     public     = true
   }
 
   private-subnet = {
-    cidr_block = "10.3.0.0/24"
+    cidr_block = "10.0.3.0/24"
     az         = "us-east-1b"
     public     = false
   }
 }
 ```
 
-### 4) network.tf (VPC + IGW)
+### 5) In subnet.tf, update subnet resource block with the following code:
 
-Create `network.tf`:
-
-```hcl
-resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-
-  tags = {
-    Name = "lab5-vpc"
-  }
-}
-
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "lab5-igw"
-  }
-}
-```
-
-### 5) subnet.tf (for\_each)
-
-Create `subnet.tf`:
+Update `subnet.tf`:
 
 ```hcl
 resource "aws_subnet" "subnet" {
   for_each = var.subnets
 
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = aws_vpc.myVpc.id
   cidr_block              = each.value.cidr_block
   availability_zone       = each.value.az
   map_public_ip_on_launch = each.value.public
@@ -168,27 +79,33 @@ resource "aws_subnet" "subnet" {
 }
 ```
 
-#### Common issue you will hit (and why)
+#### Common issue you will hit (and why?)
 
-If older code referenced a single subnet like:
+The older code referenced a single subnet like:
 
 ```hcl
-subnet_id = aws_subnet.subnet.id
+aws_subnet.subnet.id
 ```
 
 Terraform will fail because `aws_subnet.subnet` is now a map of resources.
 
 #### Temporary fix
 
-Pick one subnet key explicitly:
+Update the resources that use public subnet with this -
 
 ```hcl
-subnet_id = aws_subnet.subnet["public-subnet"].id
+aws_subnet.subnet["public-subnet"].id
 ```
 
-Later (Task 3) you will do the correct fix by selecting the subnet per instance using `each.value.subnet`.
+and the resource blocks that use private subnet with this -
 
-***
+```
+aws_subnet.subnet["private-subnet"].id
+```
+
+Later (Task 2 and 3) you will do the correct fix by selecting the subnet per instance using `each.value.subnet`.
+
+Note - This will need update in ec2\_instance.tf, nacl.tf, and route.tf files. Make sure to update the subnet reference in all these places.
 
 ## Task 2: Create multiple inbound rules using a `dynamic` block (Security Group)
 
@@ -255,13 +172,15 @@ locals {
 
 ### 4) security\_group.tf (dynamic ingress)
 
-Create `security_group.tf`:
+Update the public\_security\_group in `security_group.tf` with the following code.<br>
+
+_Note - We are not updating the private\_security\_group, if you wish you can apply the same logic to update the private security group as well._
 
 ```hcl
-resource "aws_security_group" "app_sg" {
-  name        = "lab5-app-sg"
+resource "aws_security_group" "public_security_group" {
+  name        = "allow_public_traffic"
   description = "Security group with dynamic ingress rules"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = aws_vpc.myVpc.id
 
   dynamic "ingress" {
     for_each = var.ingress
@@ -283,7 +202,7 @@ resource "aws_security_group" "app_sg" {
   }
 
   tags = merge(local.common_tags, {
-    Name = "lab5-app-sg"
+    Name = "allow_public_traffic"
   })
 }
 ```
@@ -298,11 +217,11 @@ Create `routes.tf`:
 
 ```hcl
 resource "aws_route_table" "public_rt" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.myVpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
+    gateway_id = aws_internet_gateway.gw.id
   }
 
   tags = {
@@ -311,7 +230,7 @@ resource "aws_route_table" "public_rt" {
 }
 
 resource "aws_route_table" "private_rt" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.myVpc.id
 
   tags = {
     Name = "lab5-private-rt"
@@ -367,7 +286,7 @@ ec2_instances = {
 
 ### 3) ec2\_instance.tf (for\_each + correct subnet selection)
 
-Create `ec2_instance.tf`:
+Update `ec2_instance.tf`:
 
 ```hcl
 data "aws_ami" "ubuntu_2404" {
@@ -385,13 +304,15 @@ data "aws_ami" "ubuntu_2404" {
   }
 }
 
+
 resource "aws_instance" "vm" {
   for_each = var.ec2_instances
 
   ami                         = data.aws_ami.ubuntu_2404.id
+  key_name                    = aws_key_pair.ssh_key.key_name
   instance_type               = each.value.instance_type
   subnet_id                    = aws_subnet.subnet[each.value.subnet].id
-  vpc_security_group_ids       = [aws_security_group.app_sg.id]
+  vpc_security_group_ids       = var.subnets[each.value.subnet].public ? [aws_security_group.public_security_group.id] : [aws_security_group.private_security_group.id]
   associate_public_ip_address  = each.value.public_ip
 
   tags = merge(local.common_tags, {
@@ -399,6 +320,8 @@ resource "aws_instance" "vm" {
     Subnet = each.value.subnet
   })
 }
+
+
 ```
 
 This is the correct fix for Task 1. Each VM chooses its subnet from the subnet map using the subnet key.
@@ -409,7 +332,7 @@ This is the correct fix for Task 1. Each VM chooses its subnet from the subnet m
 
 ### outputs.tf
 
-Create `outputs.tf`:
+Update `outputs.tf`:
 
 ```hcl
 output "public_ip_addresses" {

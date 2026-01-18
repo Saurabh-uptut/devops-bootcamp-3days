@@ -1,8 +1,6 @@
-# Lab 4 - Declarative Kubernetes with Pods, ReplicaSets, and Deployments
+# Lab 4: Declarative Kubernetes with Pods ReplicaSets and Deployments
 
 In this lab, you will create Pods, ReplicaSets, and Deployments using declarative YAML manifests. You will then practice scaling and rolling updates by modifying YAML files and reapplying them.
-
-***
 
 ### Prerequisites
 
@@ -13,8 +11,6 @@ You need the following:
 * `kubectl` installed
 * `kubectl` configured to point to your cluster
 
-***
-
 ### Learning Objectives
 
 By the end of this lab, you will be able to:
@@ -23,8 +19,6 @@ By the end of this lab, you will be able to:
 * Apply and manage resources declaratively
 * Scale replicas by editing manifests
 * Perform rolling updates safely and observe progress
-
-***
 
 ### Section 0: Create a Tidy Playground Namespace
 
@@ -35,8 +29,6 @@ kubectl create ns lab-declarative
 kubectl config set-context --current --namespace=lab-declarative
 kubectl get ns
 ```
-
-***
 
 ### Section 1: Pod Using Declarative YAML
 

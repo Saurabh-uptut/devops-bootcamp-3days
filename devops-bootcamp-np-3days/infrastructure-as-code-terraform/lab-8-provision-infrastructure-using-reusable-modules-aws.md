@@ -1,4 +1,4 @@
-# Lab 7: Provision AWS Infrastructure using Reusable Terraform Modules
+# Lab 6: Provision AWS Infrastructure using Reusable Terraform Modules
 
 ### Goal architecture
 
@@ -12,16 +12,12 @@
   * Public VM has a public IP
   * Private VM has no public IP
 
-***
-
 ### Learning outcomes
 
 * Build reusable Terraform modules for AWS VPC, subnets, security group, and EC2
 * Use `for_each` at the module level to create multiple subnets and VMs
 * Use `dynamic` blocks to make modules flexible (ingress rules, optional public IP)
 * Consume module outputs cleanly as maps keyed by resource name
-
-***
 
 ### Folder structure and module layout
 
@@ -36,8 +32,6 @@ mkdir -p AWS/aws_vpc \
 ```
 
 Inside each module folder you will create `variables.tf`, a main `.tf` file, and `outputs.tf`.
-
-***
 
 ## MODULE 1: VPC (`AWS/aws_vpc`)
 
@@ -102,8 +96,6 @@ output "igw_id" {
 }
 ```
 
-***
-
 ## MODULE 2: Subnet (`AWS/aws_subnet`)
 
 ### `variables.tf`
@@ -150,8 +142,6 @@ output "cidr_block" {
   value = aws_subnet.this.cidr_block
 }
 ```
-
-***
 
 ## MODULE 3: Security Group (`AWS/aws_security_group`) using `dynamic` ingress rules
 
@@ -213,8 +203,6 @@ output "security_group_id" {
   value = aws_security_group.this.id
 }
 ```
-
-***
 
 ## MODULE 4: EC2 Instance (`AWS/aws_ec2_instance`) with optional public IP
 
@@ -295,8 +283,6 @@ output "public_ip" {
 }
 ```
 
-***
-
 ## INFRA PROJECT (`infra/`)
 
 ### Step 1: Create `providers.tf`
@@ -326,8 +312,6 @@ provider "aws" {
 
 If you want to use remote state (optional), add an S3 backend here after creating the bucket and DynamoDB table.
 
-***
-
 ### Step 2: Create `variables.tf`
 
 Create `infra/variables.tf`:
@@ -339,8 +323,6 @@ variable "region" {
   default     = "us-east-1"
 }
 ```
-
-***
 
 ### Step 3: Create SSH key (TLS) + AWS Key Pair
 
@@ -364,8 +346,6 @@ output "private_key_pem" {
 ```
 
 You will use `aws_key_pair.lab_key.key_name` for both VMs.
-
-***
 
 ### Step 4: Create `locals.tf` (subnets + VMs)
 
@@ -425,8 +405,6 @@ locals {
 }
 ```
 
-***
-
 ### Step 5: Create `main.tf` (wire modules together)
 
 Create `infra/main.tf`:
@@ -472,8 +450,6 @@ module "ec2" {
 }
 ```
 
-***
-
 ### Step 6: Create `routes.tf` (public vs private routing)
 
 Create `infra/routes.tf`:
@@ -507,8 +483,6 @@ resource "aws_route_table_association" "subnet_assoc" {
   route_table_id = each.value.public ? aws_route_table.public_rt.id : aws_route_table.private_rt.id
 }
 ```
-
-***
 
 ### Step 7: Create `outputs.tf`
 
@@ -544,8 +518,6 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-***
-
 ### What students should observe
 
 * Modules are reusable across projects
@@ -553,8 +525,6 @@ terraform apply --auto-approve
 * `dynamic` blocks make modules flexible (security group rules)
 * Outputs are easy to consume as maps keyed by VM name
 * Public VM gets a public IP, private VM does not
-
-***
 
 ### Cleanup
 

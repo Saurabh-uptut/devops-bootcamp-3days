@@ -1,10 +1,6 @@
-# Lab 5 - Exposing an application with Kubernetes Services
+# Lab 5: Exposing an Application with Kubernetes Services
 
 In this lab, you will expose an NGINX application running on Kubernetes using three Service types: ClusterIP, NodePort, and LoadBalancer. You will verify connectivity and understand how Services route traffic to Pods using label selectors.
-
-This lab is written with GKE in mind, but it works on any Kubernetes cluster that supports cloud load balancers.
-
-***
 
 ### Prerequisites
 
@@ -25,8 +21,6 @@ kubectl cluster-info
 kubectl get nodes -o wide
 ```
 
-***
-
 ### Learning Objectives
 
 By the end of this lab, you will be able to:
@@ -34,8 +28,6 @@ By the end of this lab, you will be able to:
 * Understand how Services route traffic to Pods using label selectors
 * Create and test ClusterIP, NodePort, and LoadBalancer Services
 * Verify Service endpoints and troubleshoot common networking issues
-
-***
 
 ### Section 0: Create a Clean Playground Namespace
 
@@ -46,8 +38,6 @@ kubectl create ns lab-networking
 kubectl config set-context --current --namespace=lab-networking
 kubectl get ns
 ```
-
-***
 
 ### Section 1: Deploy NGINX with 3 Replicas
 

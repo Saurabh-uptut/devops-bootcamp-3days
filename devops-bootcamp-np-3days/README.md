@@ -16,7 +16,7 @@ Terraform is used to provision AWS infrastructure as code.
 #### Download Terraform
 
 Download Terraform from the official website:\
-Terraform Download
+[Terraform Download](https://developer.hashicorp.com/terraform/install)
 
 #### Install Terraform
 
@@ -50,7 +50,7 @@ AWS CLI is required to authenticate and interact with AWS.
 #### Download AWS CLI
 
 Download from:\
-AWS CLI Download
+[AWS CLI Download](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 #### Verify Installation
 
@@ -86,7 +86,7 @@ kubectl is required to interact with Kubernetes clusters such as Amazon EKS.
 #### Download kubectl
 
 Download from:\
-Download kubectl utility
+[Download kubectl utility](https://kubernetes.io/docs/tasks/tools/)
 
 #### Verify Installation
 

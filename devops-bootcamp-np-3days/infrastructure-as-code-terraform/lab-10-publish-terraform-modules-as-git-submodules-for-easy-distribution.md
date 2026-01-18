@@ -1,11 +1,8 @@
-# Lab 10: Publish Terraform Modules as Git Submodules for Easy Distribution (AWS)
+# Lab 8: Publish Terraform Modules as Git Submodules for Easy Distribution
 
-> NOTE
-> This lab continues from “Provision Infrastructure using Reusable Modules” on AWS. Complete that lab first so you already have your AWS modules folder (for example: `AWS/aws_vpc`, `AWS/aws_subnet`, `AWS/aws_security_group`, `AWS/aws_ec2_instance`).
+> NOTE This lab continues from “Provision Infrastructure using Reusable Modules” on AWS. Complete that lab first so you already have your AWS modules folder (for example: `AWS/aws_vpc`, `AWS/aws_subnet`, `AWS/aws_security_group`, `AWS/aws_ec2_instance`).
 
----
-
-## Lab Overview
+### Lab Overview
 
 You will:
 
@@ -13,9 +10,7 @@ You will:
 * Consume those modules using Git submodules
 * Use those modules in a Terraform consumer project on AWS
 
----
-
-## What is a Git Submodule?
+### What is a Git Submodule?
 
 A Git submodule is a Git repository embedded inside another Git repository. It lets you:
 
@@ -23,11 +18,9 @@ A Git submodule is a Git repository embedded inside another Git repository. It l
 * Lock the consumer project to a specific module commit
 * Update modules independently and intentionally
 
----
+## TASK 1: Publish Terraform Modules Repository (AWS)
 
-# TASK 1: Publish Terraform Modules Repository (AWS)
-
-## Step 1: Create a GitHub repository
+### Step 1: Create a GitHub repository
 
 Create a repository (public or private), for example:
 
@@ -35,7 +28,7 @@ Create a repository (public or private), for example:
 
 Copy the repository URL.
 
-## Step 2: Push your modules from the `AWS/` folder
+### Step 2: Push your modules from the `AWS/` folder
 
 From the parent directory where `AWS/` exists:
 
@@ -57,11 +50,9 @@ Result:
 
 * Your AWS Terraform modules are now available in GitHub as a standalone repository.
 
----
+## TASK 2: Use Modules via Git Submodule in a New Consumer Project
 
-# TASK 2: Use Modules via Git Submodule in a New Consumer Project
-
-## Step 1: Create a consumer project
+### Step 1: Create a consumer project
 
 ```bash
 mkdir -p module_example_aws/example01
@@ -69,7 +60,7 @@ cd module_example_aws/example01
 git init
 ```
 
-## Step 2: Add the modules repo as a submodule
+### Step 2: Add the modules repo as a submodule
 
 Add your modules repository as a submodule folder named `AWS`:
 
@@ -83,9 +74,7 @@ This creates:
 * `AWS/` directory (submodule code)
 * `.gitmodules`
 
----
-
-## Important: Cloning later (students often miss this)
+### Important: Cloning later&#x20;
 
 If someone clones `module_example_aws` later, they must do either:
 
@@ -99,9 +88,9 @@ Or after cloning:
 git submodule update --init --recursive
 ```
 
----
+***
 
-## Project Structure
+### Project Structure
 
 Your consumer project should look like this:
 
@@ -116,11 +105,11 @@ module_example_aws/
     └── outputs.tf
 ```
 
----
+***
 
-# Terraform Configuration (Consumer Project)
+## Terraform Configuration (Consumer Project)
 
-## providers.tf
+### providers.tf
 
 Create `providers.tf`:
 
@@ -145,9 +134,9 @@ provider "aws" {
 }
 ```
 
----
+***
 
-## ssh_key.tf (Generate SSH key + register AWS key pair)
+### ssh\_key.tf (Generate SSH key + register AWS key pair)
 
 Create `ssh_key.tf`:
 
@@ -168,9 +157,9 @@ output "tls_private_key" {
 }
 ```
 
----
+***
 
-## locals.tf
+### locals.tf
 
 Create `locals.tf`:
 
@@ -228,9 +217,9 @@ locals {
 }
 ```
 
----
+***
 
-## main.tf (Consume modules from the submodule folder)
+### main.tf (Consume modules from the submodule folder)
 
 Create `main.tf`:
 
@@ -279,9 +268,9 @@ Important:
 
 * The `source` points to `./AWS/...` which is the checked out Git submodule.
 
----
+***
 
-## outputs.tf
+### outputs.tf
 
 Create `outputs.tf`:
 
@@ -301,9 +290,9 @@ output "private_ips" {
 }
 ```
 
----
+***
 
-# Provision Infrastructure
+## Provision Infrastructure
 
 From `module_example_aws/example01`:
 
@@ -315,19 +304,19 @@ terraform plan
 terraform apply --auto-approve
 ```
 
----
+***
 
-# Destroy Infrastructure
+## Destroy Infrastructure
 
 ```bash
 terraform destroy --auto-approve
 ```
 
----
+***
 
-# Updating the submodule (correct workflow)
+## Updating the submodule (correct workflow)
 
-## Option A: Update to latest commit on main
+### Option A: Update to latest commit on main
 
 ```bash
 cd AWS
@@ -340,7 +329,7 @@ git commit -m "Bump terraform modules submodule"
 git push
 ```
 
-## Option B: Pin to a specific commit or tag (recommended for enterprises)
+### Option B: Pin to a specific commit or tag (recommended for enterprises)
 
 ```bash
 cd AWS
@@ -353,9 +342,7 @@ git commit -m "Pin modules to v1.0.0"
 git push
 ```
 
----
-
-## When to Use Git Submodules vs Terraform Registry
+### When to Use Git Submodules vs Terraform Registry
 
 * Git submodules: internal modules, strict pinning, controlled upgrades, private environments
 * Terraform Registry: easier consumption, better UX, semantic versioning and documentation support

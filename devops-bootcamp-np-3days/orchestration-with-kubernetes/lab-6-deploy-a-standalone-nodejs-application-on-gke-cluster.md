@@ -1,4 +1,4 @@
-# Lab 6 - Deploy a standalone NodeJs application on GKE Cluster
+# Lab 6: Deploy a Standalone Node.js Application on EKS Cluster
 
 You will containerize a simple Node.js application, push the image to a container registry, deploy it to Google Kubernetes Engine (GKE Cluster), and expose it using appropriate Kubernetes Service types for both internal and public access.
 
@@ -23,8 +23,6 @@ Clone the starter Node.js application from:
 
 (The repository contains a minimal Node.js service skeleton. You may extend it as needed.)
 
-***
-
 ### Learning Objectives
 
 By completing this lab, you will demonstrate the ability to:
@@ -35,8 +33,6 @@ By completing this lab, you will demonstrate the ability to:
   * ClusterIP for internal-only access
   * LoadBalancer for public access on AKS
 * Validate application health, connectivity, scaling, and rollouts
-
-***
 
 ### Prerequisites
 
@@ -51,8 +47,6 @@ You must have the following ready before starting:
 If you use Azure Container Registry:
 
 * Be prepared to authenticate using `az acr login`, managed identity, or `imagePullSecrets`
-
-***
 
 ### Constraints and Ground Rules
 
@@ -208,4 +202,3 @@ Your cleanup process must remove everything created by this lab, including the n
 * Rollout is stuck\
   Inspect Deployment events and probe configuration\
   Roll back if necessary
-
